@@ -1,12 +1,13 @@
 import { lerp } from "@/utils/math"
-import { store } from "@/redux/store"
+import { PerfTime } from "@/utils/timeUtils"
+import { AppState } from "@/engine/AppState"
 
 interface Res {
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
 }
 
-export function drawVisualizer(canvas: HTMLCanvasElement) {
+export function drawVisualizer(canvas: HTMLCanvasElement, appState: AppState, time: PerfTime) {
   const ctx = canvas.getContext("2d")
   if (ctx === null) {
     console.error(`Failed to get context`)
@@ -18,16 +19,14 @@ export function drawVisualizer(canvas: HTMLCanvasElement) {
     ctx
   }
 
-  const state = store.getState().metronome
+  appState.visualizer.playheadRatio
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
-  drawCursor(res, state.steady.playheadRatio)
-
-  state.steady.layers
+  drawCursor(res, appState.visualizer.playheadRatio)
 }
 
 function drawCursor(res: Res, ratio: number) {
-  drawLine(res, ratio, 2, 'white', 1)
+  drawLine(res, ratio, 1, 'white', 0.5)
 }
 
 function drawLine({ ctx, canvas }: Res, ratio: number, width: number, color: string, splitRatio: number) {

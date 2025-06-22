@@ -1,3 +1,5 @@
+import { lerp } from "./math"
+
 export class Duration {
   private seconds
 
@@ -11,6 +13,10 @@ export class Duration {
 
   static ms(millis: number): Duration {
     return new Duration(millis / 1000)
+  }
+
+  static zero(): Duration {
+    return new Duration(0)
   }
 
   s() {
@@ -39,10 +45,10 @@ export class Duration {
 }
 
 export class Tempo {
-  private _period: Duration
+  period: Duration
 
   private constructor(period: Duration) {
-    this._period = period
+    this.period = period
   }
 
   static bpm(bpm: number): Tempo {
@@ -50,11 +56,15 @@ export class Tempo {
   }
 
   bpm(): number {
-    return 60 / this._period.s()
+    return 60 / this.period.s()
   }
 
-  period(): Duration {
-    return this._period
+  beatsToDuration(beats: number): Duration {
+    return Duration.s(beats * this.period.s())
+  }
+
+  durationToBeats(duration: Duration): number {
+    return duration.s() / this.period.s()
   }
 }
 
@@ -67,6 +77,10 @@ export class PerfTime {
     this.duration = duration
   }
 
+  static s(seconds: number): PerfTime {
+    return new PerfTime(Duration.s(seconds))
+  }
+
   static now(): PerfTime {
     return new PerfTime(Duration.ms(window.performance.now()))
   }
@@ -77,22 +91,25 @@ export class PerfTime {
     return new PerfTime(Duration.ms(event.timeStamp))
   }
 
-  private absDeltaS(other: PerfTime): number {
-    return Math.abs(this.duration.s() - other.duration.s())
+  plus(duration: Duration): PerfTime {
+    return new PerfTime(this.duration.plus(duration))
   }
 
-  // WARNING: Candidates can't be empty!
-  findClosest(candidates: PerfTime[]): PerfTime {
-    let closest: PerfTime | null = null
+  delta(other: PerfTime): Duration {
+    return this.duration.minus(other.duration)
+  }
 
-    for (const candidate of candidates) {
-      if (closest === null) closest = candidate
-      if (this.absDeltaS(candidate) < this.absDeltaS(closest)) {
-        closest = candidate
-      }
-    }
+  lerp(to: PerfTime, ratio: number): PerfTime {
+    const s = lerp({ start: this.duration.s(), end: to.duration.s() }, ratio)
+    return PerfTime.s(s)
+  }
 
-    return closest!
+  isBetween(start: PerfTime, end: PerfTime): boolean {
+    return this.duration.s() >= start.duration.s() && this.duration.s() <= end.duration.s()
+  }
+
+  toString(): string {
+    return `${this.duration.s().toFixed(1)}s`
   }
 }
 

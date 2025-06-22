@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest'
 import { rangeLength, Range, lerp, unlerp, rangeFromPointLength } from './math'
 
 function r(start: number, end: number): Range {

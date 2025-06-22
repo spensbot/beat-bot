@@ -1,50 +1,33 @@
-import AudioEngine from "./AudioEngine"
-import MidiEngine, { MidiPress } from "./MidiEngine"
+import AudioEngine from "./audio/AudioEngine"
 import onNextGesture from "./onNextGesture"
 import { store } from '../redux/store'
-import { addPress, setTime } from "../redux/metronomeSlice"
-import { KeyPress, KeyboardEngine } from "./KeyboardEngine"
-import { PerfTime } from "../utils/timeUtils"
-import Watched from "../utils/watched"
-import { PlayState } from "../redux/MetronomeState"
+import { addPress } from "../redux/appSlice"
+import { InputEngine, Press_t } from "./input/InputEngine"
 
 export class Engine {
   audioEngine: AudioEngine = new AudioEngine()
-  private midiEngine: MidiEngine = new MidiEngine()
-  private keyboardEngine: KeyboardEngine = new KeyboardEngine()
-  lastCursorRatio: number = 0
-  animationHandle: number = 0
-  playState = new Watched<PlayState>(() => store.getState().metronome.steady.playState)
+  inputEngine: InputEngine = new InputEngine()
+  private _unsubscribe: (() => void) | undefined
 
   init() {
-    console.log('init')
+    console.log('Engine init()')
 
     this.audioEngine.init()
-    this.midiEngine.init((press: MidiPress) => {
-      store.dispatch(addPress(press))
-    })
-    this.keyboardEngine.init((press: KeyPress) => {
+    this.inputEngine.init((press: Press_t) => {
       store.dispatch(addPress(press))
     })
 
-    const animate = () => {
-      this.playState.ifUpdated((val) => {
-        if (val === 'Playing') {
-          console.log('playing')
-          this.audioEngine.start()
-        } else {
-          this.audioEngine.stop()
-        }
-      })
-      store.dispatch(setTime(PerfTime.now()))
-      this.animationHandle = requestAnimationFrame(animate)
-    }
+    this._unsubscribe = store.subscribe(() => {
+      const state = store.getState().app
 
-    this.animationHandle = requestAnimationFrame(animate)
+      const tempo = state.time.tempo
+      const startTime = state.activeSession?.start
+    })
   }
 
-  cleanup() {
-    cancelAnimationFrame(this.animationHandle)
+  dispose() {
+    this._unsubscribe?.()
+    this.inputEngine.dispose()
   }
 }
 

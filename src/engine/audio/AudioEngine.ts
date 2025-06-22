@@ -1,8 +1,7 @@
 import { getAudioContext, loadBuffer } from './audioUtils'
 import metronomePath from '/metronome.mp3'
-import { store } from '../redux/store'
-import { AudioTime, PerfTime, Duration, Tempo } from '../utils/timeUtils'
-import { setScheduledBeat } from '../redux/metronomeSlice'
+import { store } from '../../redux/store'
+import { AudioTime, PerfTime, Tempo } from '../../utils/timeUtils'
 
 interface GraphData {
   ctx: AudioContext
@@ -11,7 +10,6 @@ interface GraphData {
 }
 
 async function createGraph(): Promise<GraphData> {
-  console.log(`createGraph()`)
   const ctx = getAudioContext()
   const gainNode = ctx.createGain()
   const metronome = await loadBuffer(ctx, metronomePath)
@@ -25,7 +23,7 @@ async function createGraph(): Promise<GraphData> {
 }
 
 export default class AudioEngine {
-  nextClick = new PerfTime(Duration.s(0))
+  nextClick = PerfTime.s(0)
   tempo = Tempo.bpm(120)
   timeoutId: number | null = null
   graph: GraphData | null = null
@@ -39,19 +37,17 @@ export default class AudioEngine {
   }
 
   async start() {
-    console.log('playing')
-
     await this.init()
 
     this.stop()
 
     const prepNextClick = (time: AudioTime) => {
-      const { tempo, metronomeGain } = store.getState().metronome.steady
+      const { time: { tempo }, metronome } = store.getState().app
       this.tempo = tempo
 
-      this.playMetronomeSound(metronomeGain, time)
+      this.playMetronomeSound(metronome.gain, time)
 
-      const period = tempo.period()
+      const period = tempo.period
 
       const nextClickTime = time.plus(period)
 
@@ -64,11 +60,11 @@ export default class AudioEngine {
       this.timeoutId = window.setTimeout(() => prepNextClick(nextClickTime), interval.ms())
     }
 
-    const { tempo, metronomeGain } = store.getState().metronome.steady
-    this.playMetronomeSound(metronomeGain, this.currentTime())
+    const { time: { tempo }, metronome } = store.getState().app
+    this.playMetronomeSound(metronome.gain, this.currentTime())
     this.tempo = tempo
 
-    prepNextClick(this.currentTime().plus(tempo.period()))
+    prepNextClick(this.currentTime().plus(tempo.period))
   }
 
   stop() {
@@ -81,7 +77,7 @@ export default class AudioEngine {
   beatRatio(time: PerfTime): number {
     if (this.graph) {
       const delta = time.duration.minus(this.nextClick.duration)
-      return delta.s() / this.tempo.period().s()
+      return delta.s() / this.tempo.period.s()
     } else {
       return 0
     }
@@ -107,6 +103,5 @@ export default class AudioEngine {
     gainNode.gain.setValueAtTime(gain, time.duration.s())
     source.start(time.duration.s())
     this.nextClick = time.toPerf(ctx)
-    store.dispatch(setScheduledBeat(this.nextClick))
   }
 }

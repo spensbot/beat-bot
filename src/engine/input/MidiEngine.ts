@@ -1,12 +1,5 @@
-import { PerfTime } from '../utils/timeUtils'
-import { MidiDevice, MidiInput, MidiMessage, parseMidiMessage } from '../utils/midiUtils'
-
-export interface MidiPress {
-  type: 'MidiPress',
-  input: MidiInput,
-  velocity: number,
-  time: PerfTime
-}
+import { MidiDevice, MidiMessage, parseMidiMessage } from '../../utils/midiUtils'
+import { Press_t } from './InputEngine'
 
 function onMidi(access: MIDIAccess, cb: (message: MidiMessage) => void) {
   access.inputs.forEach(input => {
@@ -25,13 +18,13 @@ function onMidi(access: MIDIAccess, cb: (message: MidiMessage) => void) {
 export default class MidiEngine {
   midiAccess: MIDIAccess | null = null
 
-  async init(onPress: (press: MidiPress) => void) {
+  async init(onPress: (press: Press_t) => void) {
     this.midiAccess = await navigator.requestMIDIAccess()
 
     onMidi(this.midiAccess, (message: MidiMessage) => {
       if (message.type === 'on') {
         onPress({
-          type: 'MidiPress',
+          t: 'Press',
           time: message.time,
           input: message.input,
           velocity: message.velocity
@@ -40,10 +33,3 @@ export default class MidiEngine {
     })
   }
 }
-
-// OUTPUT FOR CONTROLLING LEDS?
-// Array.from(access.outputs.values()).forEach(output => {
-//   for (let i=0; i<127; i++) {
-//     output.send([0x90, 60, 127])
-//   }
-// })

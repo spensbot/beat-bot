@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import metronomeReducer from './metronomeSlice'
+import appReducer from './appSlice'
 
 export const store = configureStore({
   reducer: {
-    metronome: metronomeReducer
+    app: appReducer
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

@@ -1,7 +1,8 @@
-import { Duration, PerfTime } from '../utils/timeUtils'
+import { expect, test } from 'vitest'
+import { PerfTime } from '../utils/timeUtils'
 import { HitStats, getHitStats, getSessionStats } from './stats'
 
-const pt = (s: number) => new PerfTime(Duration.s(s))
+const pt = (s: number) => PerfTime.s(s)
 
 test('getHitStats', () => {
   expect(getHitStats(pt(1), pt(1)).delta.s()).toBe(0)

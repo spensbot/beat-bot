@@ -1,4 +1,5 @@
-import { PerfTime } from "../utils/timeUtils";
+import { PerfTime } from "../../utils/timeUtils";
+import { Press_t } from "./InputEngine";
 
 const validKeys = new Set('qwertyuiopasdfghjkl;zxcvbnm'.split(''));
 
@@ -7,34 +8,29 @@ export interface KeyInput {
   key: string
 }
 
-export interface KeyPress {
-  type: 'KeyPress',
-  input: KeyInput,
-  time: PerfTime
-}
-
 export class KeyboardEngine {
   onKeyDown: (e: KeyboardEvent) => void = () => { }
 
-  init(onKey: (e: KeyPress) => void) {
+  init(onKey: (e: Press_t) => void) {
     this.onKeyDown = (e: KeyboardEvent) => {
       e.timeStamp
       e.key
       if (validKeys.has(e.key)) {
         onKey({
-          type: 'KeyPress',
+          t: 'Press',
           input: {
             type: 'KeyInput',
             key: e.key
           },
-          time: PerfTime.fromEvent(e)
+          time: PerfTime.fromEvent(e),
+          velocity: 1 // Default velocity for keyboard input
         })
       }
     }
     document.addEventListener('keydown', this.onKeyDown);
   }
 
-  cleanup() {
+  dispose() {
     document.removeEventListener('keydown', this.onKeyDown)
   }
 }

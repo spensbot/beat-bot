@@ -1,23 +1,31 @@
 import { useDimsForRef } from "@/utils/hooks/useDims"
 import { useEffect, useRef } from "react"
-import { drawVisualizer } from "./VisualizerCanvas2d"
-import { useAnimated, useSteady } from "@/redux/hooks"
+import { drawVisualizer } from "./drawVisualizerCanvas2d"
+import { store } from "@/redux/store"
+import { PerfTime } from "@/utils/timeUtils"
 import { useAnimatedValue } from "@/utils/hooks/useAnimationFrame"
 
 export default function Visualizer() {
   const ref = useRef<HTMLCanvasElement | null>(null)
   const dims = useDimsForRef(ref)
-  const val = useAnimatedValue(() => Math.random())
 
   useEffect(() => {
-    if (ref.current !== null) {
-      drawVisualizer(ref.current)
+    let shouldDraw = true
+
+    const drawCb = () => {
+      if (!shouldDraw) return
+      if (ref.current) {
+        drawVisualizerWithCurrentState(ref.current)
+      }
+      requestAnimationFrame(drawCb)
     }
 
+    requestAnimationFrame(drawCb)
+
     return () => {
-      // cleanup
+      shouldDraw = false
     }
-  }, undefined) // always re-render for hot-reload
+  })
 
   return (
     <div className="h-30">
@@ -29,6 +37,20 @@ export default function Visualizer() {
         width={dims?.width}
         height={dims?.height}
       />
+      <PerfTimeView />
     </div>
   )
+}
+
+function PerfTimeView() {
+  const time = useAnimatedValue(() => PerfTime.now())
+  return (
+    <p className="text-s text-gray-500 text-left">{`Perf Time: ${time}`}</p>
+  )
+}
+
+function drawVisualizerWithCurrentState(elem: HTMLCanvasElement) {
+  const appState = store.getState().app
+  const time = PerfTime.now()
+  drawVisualizer(elem, appState, time)
 }
