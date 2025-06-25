@@ -95,6 +95,10 @@ export class PerfTime {
     return new PerfTime(this.duration.plus(duration))
   }
 
+  lessThan(other: PerfTime): boolean {
+    return this.duration.s() < other.duration.s()
+  }
+
   delta(other: PerfTime): Duration {
     return this.duration.minus(other.duration)
   }
@@ -110,6 +114,17 @@ export class PerfTime {
 
   toString(): string {
     return `${this.duration.s().toFixed(1)}s`
+  }
+
+  toAudioTime(ctx: AudioContext): AudioTime {
+    const audioNow = AudioTime.now(ctx).duration
+    const perfNow = PerfTime.now().duration
+    const delta = audioNow.minus(perfNow)
+    return new AudioTime(this.duration.plus(delta))
+  }
+
+  approxEquals(other: PerfTime, epsilon: number = 0.001): boolean {
+    return Math.abs(this.duration.s() - other.duration.s()) < epsilon
   }
 }
 

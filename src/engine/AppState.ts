@@ -1,6 +1,7 @@
 import { Tempo } from '../utils/timeUtils'
 import { defaultLoops, Loop_t } from './loop/Loop'
 import { Session_t } from './loop/Session'
+import { VisualizerSettings } from './visualizer/VisualizerSettings'
 
 export interface AppState {
   time: TimeSettings // General app settings
@@ -15,11 +16,6 @@ export interface TimeSettings {
   tempo: Tempo
   countInBeats: number
   loopRepeats: number
-}
-
-export interface VisualizerSettings {
-  length_s: number // how many seconds can be seen on the visualizer at once
-  playheadRatio: number // how far the playhead is from the start of visualizerLength
 }
 
 export interface MetronomeSettings {

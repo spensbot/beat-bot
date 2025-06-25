@@ -1,6 +1,7 @@
 import { lerp } from "@/utils/math"
 import { PerfTime } from "@/utils/timeUtils"
 import { AppState } from "@/engine/AppState"
+import { BeatMarker, getBeatMarkers } from "@/engine/visualizer/visualizerUtils"
 
 interface Res {
   canvas: HTMLCanvasElement
@@ -19,9 +20,8 @@ export function drawVisualizer(canvas: HTMLCanvasElement, appState: AppState, ti
     ctx
   }
 
-  appState.visualizer.playheadRatio
-
   ctx.clearRect(0, 0, canvas.width, canvas.height)
+  drawBeatMarkers(res, appState, time)
   drawCursor(res, appState.visualizer.playheadRatio)
 }
 
@@ -47,8 +47,21 @@ function drawLineSimple(ctx: CanvasRenderingContext2D, x: number, y1: number, y2
   ctx.stroke()
 }
 
-function drawGridMarkers() {
+function drawBeatMarkers(res: Res, appState: AppState, time: PerfTime) {
+  const { ctx, canvas } = res
+  const { visualizer, activeSession } = appState
 
+  const startTime = activeSession ? activeSession.start : time
+
+  getBeatMarkers(
+    startTime,
+    time,
+    appState.time.tempo,
+    visualizer,
+    4 // division depth
+  ).map(marker => {
+    drawLine(res, marker.ratio, 1, '#fff5', 0.3)
+  })
 }
 
 function drawGridMarker() {
