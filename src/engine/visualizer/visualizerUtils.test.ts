@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { getBeatMarkers, getVisualizerCtx, getVisualizerRatio, VisualizerCtx } from "./visualizerUtils";
+import { getBeatMarkers, getLoopMarkers, getVisualizerCtx, getVisualizerRatio, VisualizerCtx } from "./visualizerUtils";
 import { PerfTime, Tempo } from "@/utils/timeUtils";
 import { VisualizerSettings } from "./VisualizerSettings";
+import { Loop_t } from "../loop/Loop";
 
 describe("getVisualizerCtx", () => {
   it("should calculate the correct visualizer context", () => {
@@ -12,7 +13,7 @@ describe("getVisualizerCtx", () => {
       playheadRatio: 0.5
     };
 
-    const result = getVisualizerCtx(start, now, visualizer);
+    const result = getVisualizerCtx(now, visualizer);
 
     expect(result.startTime_s).toBeCloseTo(15);
     expect(result.endTime_s).toBeCloseTo(25);
@@ -20,14 +21,14 @@ describe("getVisualizerCtx", () => {
   });
 
   it("should handle later times", () => {
-    const start = PerfTime.s(20); // 20 seconds
+    const start = PerfTime.s(0); // 20 seconds
     const now = PerfTime.s(30); // 30 seconds
     const visualizer: VisualizerSettings = {
       length_s: 10,
       playheadRatio: 0.5
     };
 
-    const result = getVisualizerCtx(start, now, visualizer);
+    const result = getVisualizerCtx(now, visualizer);
 
     expect(result.startTime_s).toBeCloseTo(25);
     expect(result.endTime_s).toBeCloseTo(35);
@@ -42,7 +43,7 @@ describe("getVisualizerCtx", () => {
       playheadRatio: 0.5
     };
 
-    const result = getVisualizerCtx(start, now, visualizer);
+    const result = getVisualizerCtx(now, visualizer);
 
     expect(result.startTime_s).toBeCloseTo(5);
     expect(result.endTime_s).toBeCloseTo(15);
@@ -57,9 +58,10 @@ describe("getBeatMarkers", () => {
       endTime_s: 10,
       length_s: 10
     };
+    const start = PerfTime.s(0);
     const tempo = Tempo.bpm(30) // 2 seconds per beat
 
-    const markers = getBeatMarkers(vis, tempo, 1);
+    const markers = getBeatMarkers(start, vis, tempo, 1);
 
     expect(markers).toHaveLength(5);
     expect(markers[0].time_s).toBe(0);

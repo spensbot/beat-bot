@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import {
   endSession,
   setCountInBeats,
+  setLoop,
   setLoopRepeats,
   setTempo,
   startSession,
@@ -10,6 +11,7 @@ import { useDispatch } from "react-redux"
 import { PerfTime, Tempo } from "@/utils/timeUtils"
 import { useAppState } from "@/redux/hooks"
 import { LabeledSlider } from "../components/LabeledSlider"
+import { defaultLoops } from "@/engine/loop/Loop"
 
 export default function Controls() {
   return (
@@ -18,6 +20,7 @@ export default function Controls() {
       <TempoSlider />
       <CountInSlider />
       <LoopRepeatsSlider />
+      <LoopSelection />
     </>
   )
 }
@@ -34,7 +37,11 @@ function PlayButton() {
     }
   }
 
-  return <Button onClick={onClick}>{isPlaying ? "Stop" : "Play"}</Button>
+  return (
+    <Button className="w-50" onClick={onClick}>
+      {isPlaying ? "Stop" : "Play"}
+    </Button>
+  )
 }
 
 function TempoSlider() {
@@ -91,5 +98,31 @@ function LoopRepeatsSlider() {
       label="Loop Repeats"
       valueString={(value) => `${Math.round(value)}`}
     />
+  )
+}
+
+function LoopSelection() {
+  return (
+    <div>
+      <LoopButton idx={0} />
+      <LoopButton idx={1} />
+      <LoopButton idx={2} />
+      <LoopButton idx={3} />
+    </div>
+  )
+}
+
+function LoopButton({ idx }: { idx: number }) {
+  const dispatch = useDispatch()
+  const loop = defaultLoops[idx]
+
+  return (
+    <Button
+      onClick={() => {
+        dispatch(setLoop(loop))
+      }}
+    >
+      {idx + 1}
+    </Button>
   )
 }

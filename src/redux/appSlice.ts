@@ -6,6 +6,7 @@ import { initialState, TimeSettings } from '@/engine/AppState'
 import { Press_t } from '@/engine/input/InputEngine'
 import { initSession, Session_t } from '@/engine/loop/Session'
 import { evaluateSession } from '@/engine/loop/SessionEval'
+import { Loop_t } from '@/engine/loop/Loop'
 
 export const appSlice = createSlice({
   name: 'note',
@@ -45,6 +46,14 @@ export const appSlice = createSlice({
     setVisualizerLength: (state, action: PayloadAction<number>) => {
       state.visualizer.length_s = action.payload
     },
+    setLoop: (state, action: PayloadAction<Loop_t>) => {
+      state.loop = action.payload
+      // Reset the active session if the loop changes
+      if (state.activeSession) {
+        state.pastSessions.push(state.activeSession)
+        state.activeSession = undefined
+      }
+    }
   },
 })
 
@@ -58,6 +67,7 @@ export const {
   endSession,
   addPress,
   setVisualizerLength,
+  setLoop,
 } = appSlice.actions
 
 export default appSlice.reducer
