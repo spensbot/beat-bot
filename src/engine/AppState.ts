@@ -24,9 +24,9 @@ export interface MetronomeSettings {
 
 export const initialState: AppState = {
   time: {
-    tempo: Tempo.bpm(120),
+    tempo: Tempo.bpm(90),
     countInBeats: 4, // How many beats to count in before starting the loop
-    loopRepeats: 1, // How many times the loop should repeat
+    loopRepeats: 4, // How many times the loop should repeat
   },
   metronome: {
     gain: 0.5, // Volume of the metronome
@@ -35,6 +35,6 @@ export const initialState: AppState = {
     length_s: 8,
     playheadRatio: 0.33,
   },
-  loop: defaultLoops[0],
+  loop: defaultLoops[1],
   pastSessions: [],
 }

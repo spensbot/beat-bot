@@ -15,13 +15,13 @@ import { defaultLoops } from "@/engine/loop/Loop"
 
 export default function Controls() {
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <PlayButton />
       <TempoSlider />
       <CountInSlider />
       <LoopRepeatsSlider />
       <LoopSelection />
-    </>
+    </div>
   )
 }
 

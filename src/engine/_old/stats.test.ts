@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { PerfTime } from '../utils/timeUtils'
+import { PerfTime } from '../../utils/timeUtils'
 import { HitStats, getHitStats, getSessionStats } from './stats'
 
 const pt = (s: number) => PerfTime.s(s)

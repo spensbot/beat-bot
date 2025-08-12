@@ -1,4 +1,4 @@
-import { Duration, PerfTime } from "../utils/timeUtils";
+import { Duration, PerfTime } from "../../utils/timeUtils";
 
 export interface SessionStats {
   avgDelta: Duration // Indicates how far ahead or behind on average

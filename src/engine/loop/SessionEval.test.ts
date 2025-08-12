@@ -12,11 +12,11 @@ describe('evaluateSession', () => {
     const tempo = Tempo.bpm(60)
     const result = evaluateSession(session, loop, tempo)
 
-    expect(result.matches.size).toBe(2)
+    expect(result.matches.length).toBe(2)
     expect(result.extraPresses.size).toBe(0)
     expect(result.missedNotes.size).toBe(0)
-    expect(result.averageDrift_s).toBeCloseTo(0.15)
-    expect(result.averageDiff_s).toBeCloseTo(0.15)
+    expect(result.drift_avg_s).toBeCloseTo(0.15)
+    expect(result.diff_avg_s).toBeCloseTo(0.15)
   })
 
   test('should handle extra presses correctly', () => {
@@ -25,11 +25,11 @@ describe('evaluateSession', () => {
     const tempo = Tempo.bpm(60)
     const result = evaluateSession(session, loop, tempo)
 
-    expect(result.matches.size).toBe(1)
+    expect(result.matches.length).toBe(1)
     expect(result.extraPresses.size).toBe(1)
     expect(result.missedNotes.size).toBe(0)
-    expect(result.averageDrift_s).toBeCloseTo(0.1)
-    expect(result.averageDiff_s).toBeCloseTo(0.1)
+    expect(result.drift_avg_s).toBeCloseTo(0.1)
+    expect(result.diff_avg_s).toBeCloseTo(0.1)
   })
 
   test('should handle missed notes correctly', () => {
@@ -38,11 +38,11 @@ describe('evaluateSession', () => {
     const tempo = Tempo.bpm(60)
     const result = evaluateSession(session, loop, tempo)
 
-    expect(result.matches.size).toBe(1)
+    expect(result.matches.length).toBe(1)
     expect(result.extraPresses.size).toBe(0)
     expect(result.missedNotes.size).toBe(1)
-    expect(result.averageDrift_s).toBeCloseTo(0.1)
-    expect(result.averageDiff_s).toBeCloseTo(0.1)
+    expect(result.drift_avg_s).toBeCloseTo(0.1)
+    expect(result.diff_avg_s).toBeCloseTo(0.1)
   })
 
   test('should return empty stats when no presses or notes exist', () => {
@@ -51,11 +51,11 @@ describe('evaluateSession', () => {
     const tempo = Tempo.bpm(60)
     const result = evaluateSession(session, loop, tempo)
 
-    expect(result.matches.size).toBe(0)
+    expect(result.matches.length).toBe(0)
     expect(result.extraPresses.size).toBe(0)
     expect(result.missedNotes.size).toBe(0)
-    expect(result.averageDrift_s).toBeNaN()
-    expect(result.averageDiff_s).toBeNaN()
+    expect(result.drift_avg_s).toBe(0)
+    expect(result.diff_avg_s).toBe(0)
   })
 })
 
