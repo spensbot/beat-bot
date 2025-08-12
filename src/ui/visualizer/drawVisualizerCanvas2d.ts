@@ -1,48 +1,61 @@
 import { Duration, PerfTime } from "@/utils/timeUtils"
 import { AppState } from "@/engine/AppState"
 import { getBeatMarkers, getVisualizerCtx, getVisualizerRatio, VisualizerCtx } from "@/engine/visualizer/visualizerUtils"
-import { drawLine, drawText, drawTriangles, Canvas2DRes as Res } from "./canvas2dUtils"
+import { drawLine, drawRect, drawText, drawTriangles } from "./canvas2dUtils"
 import { expandLoop } from "@/engine/loop/Loop"
 import { SessionEval_t } from "@/engine/loop/SessionEval"
 
-export function drawVisualizer(canvas: HTMLCanvasElement, appState: AppState, now: PerfTime, stats: SessionEval_t) {
-  const ctx = canvas.getContext("2d")
-  if (ctx === null) {
+interface Ctx {
+  canvas: CanvasRenderingContext2D,
+  vis: VisualizerCtx,
+  appState: AppState,
+  now: PerfTime,
+  stats: SessionEval_t
+}
+
+export function drawVisualizer(elem: HTMLCanvasElement, appState: AppState, now: PerfTime, stats: SessionEval_t) {
+  const canvas = elem.getContext("2d")
+  if (canvas === null) {
     console.error(`Failed to get context`)
     return
   }
 
-  const res: Res = {
+  const ctx: Ctx = {
     canvas,
-    ctx
+    vis: getVisualizerCtx(now, appState.visualizer),
+    appState,
+    now,
+    stats
   }
 
-  const startTime = appState.activeSession?.start || now
-  const vis = getVisualizerCtx(now, appState.visualizer)
+  clear(ctx)
+  drawMatches(ctx)
+  drawBeatMarkers(ctx)
+  drawLoop(ctx)
+  drawPresses(ctx)
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-  drawBeatMarkers(res, vis, appState, now)
-  drawLoop(res, vis, appState, now)
-  drawPresses(res, vis, appState)
-
-  const cursorRatio = getVisualizerRatio(now.duration.s(), vis)
-  drawCursor(res, cursorRatio)
-
-  console.log(`start: ${startTime} now: ${now} | vis ${vis.startTime_s} - ${vis.endTime_s} (${vis.length_s}) | ratio: ${cursorRatio}`)
+  drawCursor(ctx)
 }
 
-function drawCursor(res: Res, ratio: number) {
+function clear({ canvas }: Ctx) {
+  const { width, height } = canvas.canvas
+  canvas.clearRect(0, 0, width, height)
+}
+
+function drawCursor({ now, vis, canvas }: Ctx) {
+  const x = getVisualizerRatio(now.duration.s(), vis)
+
   drawTriangles({
     color: '#fff',
     height: 8,
     width: 13,
-    res,
-    x: ratio
+    ctx: canvas,
+    x
   })
   // drawLine(res, ratio, 1, 'white', 0.7)
 }
 
-function drawBeatMarkers(res: Res, vis: VisualizerCtx, appState: AppState, now: PerfTime) {
+function drawBeatMarkers({ appState, now, vis, canvas }: Ctx) {
   getBeatMarkers(
     appState.activeSession?.start || now, // Use session start or default to 0
     vis,
@@ -54,22 +67,22 @@ function drawBeatMarkers(res: Res, vis: VisualizerCtx, appState: AppState, now: 
       color: '#888',
       height: 8,
       width: 10,
-      res,
+      ctx: canvas,
       x: xRatio
     })
     // drawLine(res, xRatio, 1, '#fff', 0.3)
   })
 }
 
-function drawPresses(res: Res, vis: VisualizerCtx, appState: AppState) {
+function drawPresses({ canvas, vis, appState }: Ctx) {
   if (!appState.activeSession) return
   for (const press of appState.activeSession?.presses) {
     const ratio = getVisualizerRatio(press.time.duration.s(), vis)
-    drawLine(res, ratio, 1, '#55f', 1)
+    drawLine(canvas, ratio, 1, '#55f', 1)
   }
 }
 
-function drawLoop(res: Res, vis: VisualizerCtx, appState: AppState, now: PerfTime) {
+function drawLoop({ canvas, vis, appState, now }: Ctx) {
   const { activeSession, loop, time: { tempo, loopRepeats } } = appState
 
   const start = activeSession?.start || now
@@ -79,11 +92,11 @@ function drawLoop(res: Res, vis: VisualizerCtx, appState: AppState, now: PerfTim
 
   expandedLoop.forEach(note => {
     const ratio = getVisualizerRatio(note.time.duration.s(), vis)
-    drawLine(res, ratio, 1, '#5f5', 0.5)
+    drawLine(canvas, ratio, 1, '#5f5', 0.5)
   })
 }
 
-function drawBeatNumbers(res: Res, vis: VisualizerCtx, appState: AppState, now: PerfTime) {
+function drawBeatNumbers({ canvas, vis, appState, now }: Ctx) {
   getBeatMarkers(
     appState.activeSession?.start || now, // Use session start or default to 0
     vis,
@@ -93,7 +106,20 @@ function drawBeatNumbers(res: Res, vis: VisualizerCtx, appState: AppState, now: 
     const beatNumber = marker.divisor
     const x = getVisualizerRatio(marker.time_s, vis)
     const y = 10 // arbitrary y position
-    res.ctx.fillText(beatNumber.toString(), x, y)
-    drawText(res, beatNumber.toString(), x, 0.5, "fff") // Draw text at 5% of canvas height
+    canvas.fillText(beatNumber.toString(), x, y)
+    drawText(canvas, beatNumber.toString(), x, 0.5, "fff") // Draw text at 5% of canvas height
+  })
+}
+
+function drawMatches({ vis, canvas, stats }: Ctx) {
+  stats.matches.forEach(match => {
+    const x = getVisualizerRatio(match.note.time.duration.s(), vis)
+    const width = match.delta_s / vis.length_s * canvas.canvas.width
+    drawRect({
+      ctx: canvas,
+      x,
+      width,
+      color: '#f555'
+    })
   })
 }

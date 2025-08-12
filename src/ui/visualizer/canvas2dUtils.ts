@@ -1,19 +1,14 @@
 import { lerp } from "@/utils/math"
 
-export interface Canvas2DRes {
-  canvas: HTMLCanvasElement
-  ctx: CanvasRenderingContext2D
-}
-
-export function drawLine({ ctx, canvas }: Canvas2DRes, ratio: number, width: number, color: string, splitRatio: number) {
+export function drawLine(ctx: CanvasRenderingContext2D, ratio: number, width: number, color: string, splitRatio: number) {
   ctx.strokeStyle = color
   ctx.lineWidth = width
-  const x = canvas.width * ratio
+  const x = ctx.canvas.width * ratio
 
   // drawLineSimple(ctx, x, 0, canvas.height)
 
-  drawLineSimple(ctx, x, 0, lerp({ start: 0, end: canvas.height * 0.5 }, splitRatio))
-  drawLineSimple(ctx, x, canvas.height, lerp({ start: canvas.height, end: canvas.height * 0.5 }, splitRatio))
+  drawLineSimple(ctx, x, 0, lerp({ start: 0, end: ctx.canvas.height * 0.5 }, splitRatio))
+  drawLineSimple(ctx, x, ctx.canvas.height, lerp({ start: ctx.canvas.height, end: ctx.canvas.height * 0.5 }, splitRatio))
 }
 
 export function drawLineSimple(ctx: CanvasRenderingContext2D, x: number, y1: number, y2: number) {
@@ -23,17 +18,17 @@ export function drawLineSimple(ctx: CanvasRenderingContext2D, x: number, y1: num
   ctx.stroke()
 }
 
-export function drawText(res: Canvas2DRes, text: string, xRatio: number, yRatio: number, color: string) {
-  const x = getX(res, xRatio)
-  const y = getY(res, yRatio)
+export function drawText(ctx: CanvasRenderingContext2D, text: string, xRatio: number, yRatio: number, color: string) {
+  const x = getX(ctx, xRatio)
+  const y = getY(ctx, yRatio)
 
-  res.ctx.font = "48px serif";
-  res.ctx.fillStyle = color
-  res.ctx.fillText(text, x, y)
+  ctx.font = "48px serif";
+  ctx.fillStyle = color
+  ctx.fillText(text, x, y)
 }
 
 interface DrawTrianglesProps {
-  res: Canvas2DRes
+  ctx: CanvasRenderingContext2D
   x: number
   height: number
   width: number
@@ -59,13 +54,13 @@ interface DrawTriangleProps extends DrawTrianglesProps {
 export function drawTriangle(p: DrawTriangleProps) {
   drawTriangleSimple({
     ...p,
-    x: getX(p.res, p.x),
-    y: getY(p.res, p.y)
+    x: getX(p.ctx, p.x),
+    y: getY(p.ctx, p.y)
   })
 }
 
 /** x, y is for the bottom point of the triangle */
-function drawTriangleSimple({ res: { ctx }, x, y, color, width, height }: DrawTriangleProps) {
+function drawTriangleSimple({ ctx, x, y, color, width, height }: DrawTriangleProps) {
   ctx.fillStyle = color
   ctx.beginPath()
   ctx.moveTo(x, y + height)
@@ -75,5 +70,24 @@ function drawTriangleSimple({ res: { ctx }, x, y, color, width, height }: DrawTr
   ctx.fill()
 }
 
-const getX = (res: Canvas2DRes, xRatio: number) => res.canvas.width * xRatio
-const getY = (res: Canvas2DRes, yRatio: number) => res.canvas.height * yRatio
+interface DrawSquareProps {
+  ctx: CanvasRenderingContext2D
+  x: number
+  width: number
+  color: string
+}
+
+export function drawRect(p: DrawSquareProps) {
+  drawRectSimple({
+    ...p,
+    x: getX(p.ctx, p.x)
+  })
+}
+
+function drawRectSimple({ ctx, x, width, color }: DrawSquareProps) {
+  ctx.fillStyle = color
+  ctx.fillRect(x, 0, width, ctx.canvas.height)
+}
+
+const getX = (ctx: CanvasRenderingContext2D, xRatio: number) => ctx.canvas.width * xRatio
+const getY = (ctx: CanvasRenderingContext2D, yRatio: number) => ctx.canvas.height * yRatio

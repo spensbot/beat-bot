@@ -46,8 +46,8 @@ export function concat(loops: Loop_t[], name: string = ''): Loop_t {
 export const defaultLoops: Loop_t[] = [
   concat(indexArray(4).map(_ => repeat(1, 'Single'))),
   concat(indexArray(4).map(_ => repeat(2, 'Double'))),
-  concat(indexArray(4).map(_ => repeat(4, 'Triple'))),
-  concat(indexArray(4).map(_ => repeat(8, 'Quad')))
+  concat(indexArray(4).map(_ => repeat(3, 'Triple'))),
+  concat(indexArray(4).map(_ => repeat(4, 'Quad')))
 ]
 
 export interface ExpandedNote_t {

@@ -7,17 +7,7 @@ import { Stats } from "@/utils/Stats";
 export interface Match_t {
   press: Press_t
   note: ExpandedNote_t
-
-  /** press_time - target_time
-   * Indicates if the user's timing is early or late.
-   * Negative = early, positive = late
-  */
-  drift: number
-  /** abs(press_time - target_time)
-   * Indicates how far the user's timing is from the target
-   * Always positive
-  */
-  diff: number
+  delta_s: number
 }
 
 export interface SessionEval_t {
@@ -25,9 +15,8 @@ export interface SessionEval_t {
   extraPresses: Set<Press_t>
   missedNotes: Set<ExpandedNote_t>
 
-  diff_avg_s: number
-  drift_avg_s: number
-  drift_stdDev_s: number
+  delta_avg_s: number
+  delta_stdDev_s: number
 }
 
 export function emptySessionEval(): SessionEval_t {
@@ -35,9 +24,8 @@ export function emptySessionEval(): SessionEval_t {
     matches: [],
     extraPresses: new Set(),
     missedNotes: new Set(),
-    drift_avg_s: 0,
-    diff_avg_s: 0,
-    drift_stdDev_s: 0,
+    delta_avg_s: 0,
+    delta_stdDev_s: 0
   }
 }
 
@@ -77,8 +65,7 @@ export function evaluateSession(
       matches.push({
         press: closestPress,
         note,
-        drift: closestPress.time.duration.s() - note.time.duration.s(),
-        diff: Math.abs(closestPress.time.duration.s() - note.time.duration.s())
+        delta_s: closestPress.time.duration.s() - note.time.duration.s()
       })
       unrolled.delete(note)
       presses.delete(closestPress)
@@ -91,11 +78,7 @@ export function evaluateSession(
     extraPresses: presses,
     missedNotes: unrolled,
 
-    diff_avg_s: Stats.mean(matches.map(m => getDiff_s(m.press, m.note))),
-    drift_avg_s: Stats.mean(matches.map(m => getDrift_s(m.press, m.note))),
-    drift_stdDev_s: Stats.stdDev(matches.map(m => getDrift_s(m.press, m.note)))
+    delta_avg_s: Stats.mean(matches.map(m => m.delta_s)),
+    delta_stdDev_s: Stats.stdDev(matches.map(m => m.delta_s))
   }
 }
-
-const getDrift_s = (press: Press_t, note: ExpandedNote_t): number => press.time.duration.s() - note.time.duration.s()
-const getDiff_s = (press: Press_t, note: ExpandedNote_t): number => Math.abs(press.time.duration.s() - note.time.duration.s())

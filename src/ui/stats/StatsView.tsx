@@ -17,12 +17,12 @@ export default function StatsView() {
       <Stat name="Missed Notes" value={stats.missedNotes.size.toString()} /> */}
       <Stat
         name="Deviation"
-        value={`${(stats.drift_stdDev_s * 1000).toFixed(1)}ms`}
+        value={`${(stats.delta_stdDev_s * 1000).toFixed(1)}ms`}
         color="#fff"
       />
       <Stat
-        name={stats.drift_avg_s < 0 ? "Leading" : "Lagging"}
-        value={`${(stats.drift_avg_s * 1000).toFixed(1)}ms`}
+        name={stats.delta_avg_s < 0 ? "Leading" : "Lagging"}
+        value={`${(stats.delta_avg_s * 1000).toFixed(1)}ms`}
         color="#fff"
       />
     </div>
