@@ -2,15 +2,19 @@
 
 ## Todos
 
-- Create Loop_t
-- Visualize Loop in realtime
-- Create Session_t
-- Visualize Session in realtime
-- Integrate basic hit sound (snare probs)
-- Create SessionStats_t
-- Visualize SessionStats
+- Loop bar length (3, 4, etc.)
+- Improved loop selector
+  - Virtual scrolling
+  - Difficulty
+  - Preview visualizer
+  - 
+- Draggable visualizer to review session
+- Graph historical stats
+  - Overall history
+  - Loop-based history
 
 ... later
 
-
-- Integrate input filters
+- Loops with multiple "tracks?"
+  - Ability to have loops with different input notes
+- Integrate basic hit sound (snare probs)
