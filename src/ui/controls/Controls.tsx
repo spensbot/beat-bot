@@ -20,7 +20,6 @@ export default function Controls() {
       <TempoSlider />
       <CountInSlider />
       <LoopRepeatsSlider />
-      <LoopSelection />
     </div>
   )
 }
@@ -98,17 +97,6 @@ function LoopRepeatsSlider() {
       label="Loop Repeats"
       valueString={(value) => `${Math.round(value)}`}
     />
-  )
-}
-
-function LoopSelection() {
-  return (
-    <div>
-      <LoopButton idx={0} />
-      <LoopButton idx={1} />
-      <LoopButton idx={2} />
-      <LoopButton idx={3} />
-    </div>
   )
 }
 

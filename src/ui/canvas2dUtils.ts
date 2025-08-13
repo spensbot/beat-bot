@@ -1,5 +1,10 @@
 import { lerp } from "@/utils/math"
 
+export function clear(ctx: CanvasRenderingContext2D) {
+  const { width, height } = ctx.canvas
+  ctx.clearRect(0, 0, width, height)
+}
+
 export function drawLine(ctx: CanvasRenderingContext2D, ratio: number, width: number, color: string, splitRatio: number) {
   ctx.strokeStyle = color
   ctx.lineWidth = width

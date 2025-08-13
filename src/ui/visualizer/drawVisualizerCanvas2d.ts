@@ -1,7 +1,7 @@
 import { Duration, PerfTime } from "@/utils/timeUtils"
 import { AppState } from "@/engine/AppState"
 import { getBeatMarkers, getVisualizerCtx, getVisualizerRatio, VisualizerCtx } from "@/engine/visualizer/visualizerUtils"
-import { drawLine, drawRect, drawText, drawTriangles } from "./canvas2dUtils"
+import { clear, drawLine, drawRect, drawText, drawTriangles } from "../canvas2dUtils"
 import { expandLoop } from "@/engine/loop/expandLoop"
 import { SessionEval_t } from "@/engine/loop/SessionEval"
 
@@ -28,18 +28,13 @@ export function drawVisualizer(elem: HTMLCanvasElement, appState: AppState, now:
     stats
   }
 
-  clear(ctx)
+  clear(canvas)
   drawMatches(ctx)
   drawBeatMarkers(ctx)
   drawLoop(ctx)
   drawPresses(ctx)
 
   drawCursor(ctx)
-}
-
-function clear({ canvas }: Ctx) {
-  const { width, height } = canvas.canvas
-  canvas.clearRect(0, 0, width, height)
 }
 
 function drawCursor({ now, vis, canvas }: Ctx) {
