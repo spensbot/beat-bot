@@ -18,7 +18,7 @@ export default function LoopPreview({ data }: { data: LoopData_t }) {
   })
 
   return (
-    <div className="h-10 w-50">
+    <div className="h-10 w-50 bg-emerald-900">
       <canvas
         ref={ref}
         className="w-full h-full"

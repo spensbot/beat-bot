@@ -7,7 +7,7 @@ export default function StatsView() {
   const stats = useAppState(selectSessionEval) ?? emptySessionEval()
 
   return (
-    <div>
+    <div className="flex flex-col gap-1 w-50">
       <Stat
         name="Matches"
         value={stats.matches.length.toString()}
@@ -39,6 +39,7 @@ const Stat = ({
   color: string
 }) => (
   <div>
-    <strong className={cn(color, "text-3xl")}>{value}</strong> {name}
+    <strong className={cn(color, "text-3xl")}>{value}</strong>
+    <p className="text-neutral-500">{name}</p>
   </div>
 )

@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button"
 import {
   endSession,
   setCountInBeats,
-  setLoop,
   setLoopRepeats,
   setTempo,
   startSession,
@@ -11,7 +10,6 @@ import { useDispatch } from "react-redux"
 import { PerfTime, Tempo } from "@/utils/timeUtils"
 import { useAppState } from "@/redux/hooks"
 import { LabeledSlider } from "../components/LabeledSlider"
-import { defaultLoops } from "@/engine/loop/defaultLoops"
 
 export default function Controls() {
   return (
@@ -97,20 +95,5 @@ function LoopRepeatsSlider() {
       label="Loop Repeats"
       valueString={(value) => `${Math.round(value)}`}
     />
-  )
-}
-
-function LoopButton({ idx }: { idx: number }) {
-  const dispatch = useDispatch()
-  const loop = defaultLoops[idx]
-
-  return (
-    <Button
-      onClick={() => {
-        dispatch(setLoop(loop))
-      }}
-    >
-      {idx + 1}
-    </Button>
   )
 }

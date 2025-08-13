@@ -22,7 +22,7 @@ export function LabeledSlider({
   return (
     <div className="flex flex-col gap-1 items-start">
       <div className="flex w-50 justify-between items-center">
-        <p>{label}</p>
+        <p className="text-neutral-500">{label}</p>
         {valueString && (
           <p className="opacity-80 text-sm">{valueString(value)}</p>
         )}

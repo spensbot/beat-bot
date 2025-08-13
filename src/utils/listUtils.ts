@@ -12,3 +12,14 @@ export function indexArray(length: number): number[] {
 export function sum<T>(list: T[], get: (item: T) => number): number {
   return list.reduce((acc, item) => acc + get(item), 0)
 }
+
+export function insertBetween<T, U>(list: T[], gap: U): (T | U)[] {
+  const out: (T | U)[] = []
+  for (let i = 0; i < list.length; i++) {
+    out.push(list[i])
+    if (i !== list.length - 1) {
+      out.push(gap)
+    }
+  }
+  return out
+}

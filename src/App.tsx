@@ -7,9 +7,9 @@ import { LoopSelectView } from "./ui/controls/loop-select/LoopSelectView"
 
 function App() {
   return (
-    <div className="flex flex-col gap-4 h-screen">
+    <div className="flex flex-col gap-4 h-screen bg-neutral-950">
       <Visualizer />
-      <div className="flex flex-row gap-4 p-4">
+      <div className="flex flex-row gap-4 px-4">
         <Controls />
         {/* <Debugger /> */}
         <StatsView />
