@@ -1,7 +1,8 @@
 import { Tempo } from '../utils/timeUtils'
-import { defaultLoops, Loop_t } from './loop/Loop'
+import { Loop_t } from './loop/Loop'
 import { Session_t } from './loop/Session'
 import { VisualizerSettings } from './visualizer/VisualizerSettings'
+import { defaultLoops } from './loop/defaultLoops'
 
 export interface AppState {
   time: TimeSettings // General app settings

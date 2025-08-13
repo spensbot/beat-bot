@@ -7,8 +7,8 @@
   - Virtual scrolling
   - Difficulty
   - Preview visualizer
-  - 
 - Draggable visualizer to review session
+- Persist state
 - Graph historical stats
   - Overall history
   - Loop-based history

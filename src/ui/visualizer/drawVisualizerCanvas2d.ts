@@ -2,7 +2,7 @@ import { Duration, PerfTime } from "@/utils/timeUtils"
 import { AppState } from "@/engine/AppState"
 import { getBeatMarkers, getVisualizerCtx, getVisualizerRatio, VisualizerCtx } from "@/engine/visualizer/visualizerUtils"
 import { drawLine, drawRect, drawText, drawTriangles } from "./canvas2dUtils"
-import { expandLoop } from "@/engine/loop/Loop"
+import { expandLoop } from "@/engine/loop/expandLoop"
 import { SessionEval_t } from "@/engine/loop/SessionEval"
 
 interface Ctx {
@@ -86,9 +86,9 @@ function drawLoop({ canvas, vis, appState, now }: Ctx) {
   const { activeSession, loop, time: { tempo, loopRepeats } } = appState
 
   const start = activeSession?.start || now
-  const playDuration = Duration.s(loop.beatLength * tempo.period.s() * loopRepeats)
+  const playDuration = Duration.s(loop.data.beatLength * tempo.period.s() * loopRepeats)
   const end = start.plus(playDuration)
-  const expandedLoop = expandLoop(loop, start, end, tempo)
+  const expandedLoop = expandLoop(loop.data, start, end, tempo)
 
   expandedLoop.forEach(note => {
     const ratio = getVisualizerRatio(note.time.duration.s(), vis)

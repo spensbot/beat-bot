@@ -17,7 +17,7 @@ export function initSession(now: PerfTime, loop: Loop_t, time: TimeSettings): Se
   const countInTime = time.tempo.beatsToDuration(time.countInBeats)
 
   const start = now.plus(countInTime)
-  const loopDuration = time.tempo.beatsToDuration(loop.beatLength * time.loopRepeats);
+  const loopDuration = time.tempo.beatsToDuration(loop.data.beatLength * time.loopRepeats);
   const end = start.plus(loopDuration.plus(afterBuffer))
 
   return {

@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux"
 import { PerfTime, Tempo } from "@/utils/timeUtils"
 import { useAppState } from "@/redux/hooks"
 import { LabeledSlider } from "../components/LabeledSlider"
-import { defaultLoops } from "@/engine/loop/Loop"
+import { defaultLoops } from "@/engine/loop/defaultLoops"
 
 export default function Controls() {
   return (

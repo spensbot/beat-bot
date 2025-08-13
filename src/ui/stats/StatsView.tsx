@@ -1,10 +1,10 @@
 import { useAppState } from "@/redux/hooks"
 import cn from "@/utils/cn"
 import { selectSessionEval } from "./selectSessionEval"
+import { emptySessionEval } from "@/engine/loop/SessionEval"
 
 export default function StatsView() {
-  const stats = useAppState(selectSessionEval)
-  if (!stats) return null
+  const stats = useAppState(selectSessionEval) ?? emptySessionEval()
 
   return (
     <div>

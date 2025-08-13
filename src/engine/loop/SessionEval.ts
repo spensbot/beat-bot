@@ -1,8 +1,9 @@
 import { PerfTime, Tempo } from "@/utils/timeUtils";
-import { Loop_t, ExpandedNote_t, expandLoop } from "./Loop";
+import { ExpandedNote_t, expandLoop } from "./expandLoop";
 import { Session_t } from "./Session";
 import { Press_t } from "../input/InputEngine";
 import { Stats } from "@/utils/Stats";
+import { LoopData_t } from "./LoopData";
 
 export interface Match_t {
   press: Press_t
@@ -31,9 +32,9 @@ export function emptySessionEval(): SessionEval_t {
 
 export function evaluateSession(
   session: Session_t,
-  loop: Loop_t,
+  loopData: LoopData_t,
   tempo: Tempo): SessionEval_t {
-  const unrolledList = expandLoop(loop, session.start, session.end, tempo)
+  const unrolledList = expandLoop(loopData, session.start, session.end, tempo)
   const unrolled = new Set(unrolledList)
   const presses = new Set(session.presses)
 

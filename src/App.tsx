@@ -3,6 +3,7 @@ import Controls from "./ui/controls/Controls"
 import Visualizer from "./ui/visualizer/Visualizer"
 import "./engine/engine"
 import StatsView from "./ui/stats/StatsView"
+import { LoopSelectView } from "./ui/controls/loop-select/LoopSelectView"
 
 function App() {
   return (
@@ -12,6 +13,9 @@ function App() {
         <Controls />
         {/* <Debugger /> */}
         <StatsView />
+        <div className="grow">
+          <LoopSelectView />
+        </div>
       </div>
     </div>
   )

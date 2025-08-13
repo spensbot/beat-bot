@@ -40,7 +40,7 @@ export const appSlice = createSlice({
       state.activeSession?.presses.push(action.payload)
 
       if (state.activeSession) {
-        state.activeSession.eval = evaluateSession(state.activeSession as Session_t, state.loop, state.time.tempo as Tempo)
+        state.activeSession.eval = evaluateSession(state.activeSession as Session_t, state.loop.data, state.time.tempo as Tempo)
       }
     },
     setVisualizerLength: (state, action: PayloadAction<number>) => {

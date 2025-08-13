@@ -10,6 +10,6 @@ export const selectSessionEval = createSelector(
   ],
   (session, loop, tempo) => {
     if (!session) return undefined
-    return evaluateSession(session, loop, tempo)
+    return evaluateSession(session, loop.data, tempo)
   }
 )

@@ -1,6 +1,7 @@
 import { PerfTime, Tempo } from "@/utils/timeUtils";
 import { VisualizerSettings } from "./VisualizerSettings";
-import { Loop_t, LoopNote_t } from "../loop/Loop";
+import { Loop_t } from "../loop/Loop";
+import { LoopNote_t } from "../loop/LoopData";
 
 /** The base required for drawing time points on a visualizer */
 export interface VisualizerCtx {
@@ -63,12 +64,12 @@ export function getLoopMarkers(
   tempo: Tempo): LoopMarker[] {
   const markers: LoopMarker[] = []
 
-  const loopPeriod_s = loop.beatLength * tempo.period.s();
+  const loopPeriod_s = loop.data.beatLength * tempo.period.s();
 
   let loopStartTime = Math.floor((vis.startTime_s - start.duration.s()) / loopPeriod_s) * loopPeriod_s + start.duration.s();
 
   while (loopStartTime < vis.endTime_s) {
-    loop.notes.forEach(note => {
+    loop.data.notes.forEach(note => {
       markers.push({
         note,
         time_s: loopStartTime + note.beatTime * tempo.period.s()
