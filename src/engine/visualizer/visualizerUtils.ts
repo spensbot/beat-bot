@@ -22,27 +22,31 @@ export function getVisualizerCtx(now: PerfTime, visualizer: VisualizerSettings):
 }
 
 export interface BeatMarker {
-  divisor: number; // The divisor for the beat marker (e.g., 1, 2, 4, 8)
   time_s: number;
+  count: number;
 }
 
 export function getBeatMarkers(
   start: PerfTime,
   vis: VisualizerCtx,
   tempo: Tempo,
-  divisionDepth: number): BeatMarker[] {
+  beatsPerBar: number): BeatMarker[] {
   const markers: BeatMarker[] = []
 
   const period_s = tempo.period.s();
 
   let beatTime = Math.floor((vis.startTime_s - start.duration.s()) / period_s) * period_s + start.duration.s();
+  let count = (Math.floor((vis.startTime_s - start.duration.s()) / period_s) + 1) % 4
+
 
   while (beatTime < vis.endTime_s) {
     markers.push({
-      divisor: 1,
-      time_s: beatTime
+      time_s: beatTime,
+      count
     })
     beatTime += period_s;
+    count += 1
+    if (count > beatsPerBar) count = 1
   }
 
   return markers

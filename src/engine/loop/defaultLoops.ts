@@ -31,7 +31,7 @@ function basicRepeat(name: string, divisor: number, difficulty: number): Loop_t 
 }
 
 function alternate(loops: Loop_t[]): Loop_t {
-  const name = insertBetween(loops.map(l => l.name), ' <-> ').join('')
+  const name = loops.map(l => l.name).join(', ')
   return concatLoops(name, loops)
 }
 

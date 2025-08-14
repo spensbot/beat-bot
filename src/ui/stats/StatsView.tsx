@@ -4,27 +4,23 @@ import { selectSessionEval } from "./selectSessionEval"
 import { emptySessionEval } from "@/engine/loop/SessionEval"
 
 export default function StatsView() {
-  const stats = useAppState(selectSessionEval) ?? emptySessionEval()
+  const stats = useAppState(selectSessionEval)
+
+  const matches = stats?.matches.length.toString() ?? "-"
+  const deviation = stats
+    ? `${(stats.delta_stdDev_s * 1000).toFixed(1)}ms`
+    : "-"
+  const deltaAvg = stats ? `${(stats.delta_avg_s * 1000).toFixed(1)}ms` : "-"
+  const deltaText =
+    stats === undefined ? "" : stats.delta_avg_s < 0 ? "Leading" : "Lagging"
 
   return (
     <div className="flex flex-col gap-1 w-50">
-      <Stat
-        name="Matches"
-        value={stats.matches.length.toString()}
-        color="#fff"
-      />
+      <Stat name="Matches" value={matches} color="#fff" />
       {/* <Stat name="Extra Presses" value={stats.extraPresses.size.toString()} />
       <Stat name="Missed Notes" value={stats.missedNotes.size.toString()} /> */}
-      <Stat
-        name="Deviation"
-        value={`${(stats.delta_stdDev_s * 1000).toFixed(1)}ms`}
-        color="#fff"
-      />
-      <Stat
-        name={stats.delta_avg_s < 0 ? "Leading" : "Lagging"}
-        value={`${(stats.delta_avg_s * 1000).toFixed(1)}ms`}
-        color="#fff"
-      />
+      <Stat name="Deviation" value={`${deviation}`} color="#fff" />
+      <Stat name={deltaText} value={`${deltaAvg}`} color="#fff" />
     </div>
   )
 }

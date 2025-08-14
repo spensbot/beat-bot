@@ -23,13 +23,22 @@ export function drawLineSimple(ctx: CanvasRenderingContext2D, x: number, y1: num
   ctx.stroke()
 }
 
-export function drawText(ctx: CanvasRenderingContext2D, text: string, xRatio: number, yRatio: number, color: string) {
-  const x = getX(ctx, xRatio)
-  const y = getY(ctx, yRatio)
+interface DrawTextProps {
+  ctx: CanvasRenderingContext2D
+  text: string
+  x: number
+  y: number
+  color: string
+  size: number
+}
 
-  ctx.font = "48px serif";
+export function drawText({ ctx, text, x, y, color, size }: DrawTextProps) {
+  const xpx = getX(ctx, x) - size / 4
+  const ypx = getY(ctx, y) + size / 4
+
+  ctx.font = `${size}px sarif`;
   ctx.fillStyle = color
-  ctx.fillText(text, x, y)
+  ctx.fillText(text, xpx, ypx)
 }
 
 interface DrawTrianglesProps {

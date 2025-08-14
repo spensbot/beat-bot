@@ -8,9 +8,9 @@ import useHover from "@/utils/hooks/useHover"
 import { useAppState } from "@/redux/hooks"
 import { cn } from "@/lib/utils"
 
-export function LoopSelectView() {
+export function LoopSelectView({ className }: { className: string }) {
   return (
-    <div>
+    <div className={className}>
       {defaultLoops.map((loop) => (
         <LoopView key={loop.id} loop={loop} />
       ))}
@@ -35,8 +35,8 @@ function LoopView({ loop }: { loop: Loop_t }) {
       ref={hoverDiv}
       className={cn(
         "flex items-center gap-2 px-4 w-full h-15 opacity-70 cursor-pointer border border-transparent",
-        isPoppin && "border-emerald-500 bg-emerald-950  opacity-100",
-        isHover && "border-emerald-500"
+        isActive && "border-emerald-500",
+        isPoppin && "bg-emerald-950 opacity-100"
       )}
       onClick={setAsActiveLoop}
     >

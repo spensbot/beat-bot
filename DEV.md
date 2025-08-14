@@ -2,11 +2,7 @@
 
 ## Todos
 
-- Loop bar length (3, 4, etc.)
-- Improved loop selector
-  - Virtual scrolling
-  - Difficulty
-  - Preview visualizer
+- Count display (1, 2, 3, 4, etc)
 - Draggable visualizer to review session
 - Persist state
 - Graph historical stats

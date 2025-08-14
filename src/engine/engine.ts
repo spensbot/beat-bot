@@ -10,6 +10,7 @@ export class Engine {
   inputEngine: InputEngine = new InputEngine()
   private _nextMetronomeTime: PerfTime = PerfTime.s(0)
   private _disposed: boolean = false
+  private _sessionStartTime: PerfTime = PerfTime.s(0)
 
   init() {
     console.log('Engine init()')
@@ -17,6 +18,15 @@ export class Engine {
     this.audioEngine.init()
     this.inputEngine.init((press: Press_t) => {
       store.dispatch(addPress(press))
+    })
+
+    store.subscribe(() => {
+      const appState = store.getState().app
+      const sesh = appState.activeSession
+      if (sesh && sesh.start !== this._sessionStartTime) {
+        this._sessionStartTime = sesh.start
+        this.audioEngine.playMetronomeSound(appState.metronome.gain, PerfTime.now())
+      }
     })
 
     this.syncAudioOnAnimationFrame()
