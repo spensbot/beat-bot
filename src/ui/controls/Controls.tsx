@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux"
 import { PerfTime, Tempo } from "@/utils/timeUtils"
 import { useAppState } from "@/redux/hooks"
 import { LabeledSlider } from "../components/LabeledSlider"
+import { useAnimatedValue } from "@/utils/hooks/useAnimationFrame"
 
 export default function Controls() {
   return (
@@ -22,21 +23,38 @@ export default function Controls() {
   )
 }
 
+type PlayState_t = "idle" | "playing" | "stopped"
+
 function PlayButton() {
   const dispatch = useDispatch()
-  const isPlaying = useAppState((s) => s.activeSession !== undefined)
+  const end = useAppState((s) => s.activeSession?.end)
+  const playState = useAnimatedValue<PlayState_t>(() => {
+    if (end === undefined) return "idle"
+    return PerfTime.now().lessThan(end) ? "playing" : "stopped"
+  })
 
   const onClick = () => {
-    if (isPlaying) {
+    if (playState === "playing") {
       dispatch(endSession())
     } else {
       dispatch(startSession(PerfTime.now()))
     }
   }
 
+  const buttonText = (): string => {
+    switch (playState) {
+      case "idle":
+        return "Play"
+      case "playing":
+        return "Stop"
+      case "stopped":
+        return "Restart"
+    }
+  }
+
   return (
     <Button className="w-50" onClick={onClick}>
-      {isPlaying ? "Stop" : "Play"}
+      {buttonText()}
     </Button>
   )
 }

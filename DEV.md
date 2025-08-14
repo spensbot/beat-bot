@@ -2,7 +2,6 @@
 
 ## Todos
 
-- Count display (1, 2, 3, 4, etc)
 - Draggable visualizer to review session
 - Persist state
 - Graph historical stats
