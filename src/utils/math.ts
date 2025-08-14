@@ -23,3 +23,9 @@ export function rangeFromPointLength(point: number, length: number, ratio: numbe
     end: start + length
   }
 }
+
+export function clamp(val: number, min: number, max: number): number {
+  if (val < min) return min
+  if (val > max) return max
+  return val
+}

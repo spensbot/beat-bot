@@ -11,15 +11,16 @@ export interface Session_t {
   end: PerfTime
   presses: Press_t[]
   eval: SessionEval_t
+  scrubTime?: PerfTime
 }
 
-export function sessionStartTime(now: PerfTime, time: TimeSettings): PerfTime {
+export function sessionStartTimeFromNow(now: PerfTime, time: TimeSettings): PerfTime {
   const countInTime = time.tempo.beatsToDuration(time.countInBeats)
   return now.plus(countInTime)
 }
 
 export function initSession(now: PerfTime, loop: Loop_t, time: TimeSettings): Session_t {
-  const start = sessionStartTime(now, time)
+  const start = sessionStartTimeFromNow(now, time)
   const loopDuration = time.tempo.beatsToDuration(loop.data.beatLength * time.loopRepeats);
   const end = start.plus(loopDuration)
   // const end = start.plus(loopDuration.plus(afterBuffer))

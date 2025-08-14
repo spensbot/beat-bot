@@ -1,23 +1,45 @@
 import { PerfTime, Tempo } from "@/utils/timeUtils";
-import { VisualizerSettings } from "./VisualizerSettings";
 import { Loop_t } from "../loop/Loop";
 import { LoopNote_t } from "../loop/LoopData";
+import { Session_t, sessionStartTimeFromNow } from "../loop/Session";
+import { AppState, TimeSettings } from "../AppState";
+
+function getCursorTime(now: PerfTime, activeSession?: Session_t) {
+  if (activeSession?.scrubTime !== undefined) return activeSession.scrubTime
+  if (activeSession && activeSession.end.lessThan(now)) return activeSession.end
+  return now
+}
+
+function getSessionStartTime(now: PerfTime, time: TimeSettings, activeSession?: Session_t) {
+  let sessionStart = sessionStartTimeFromNow(now, time)
+  if (activeSession) {
+    sessionStart = activeSession.start
+  }
+  return sessionStart
+}
 
 /** The base required for drawing time points on a visualizer */
 export interface VisualizerCtx {
+  cursor_s: number
   startTime_s: number
   endTime_s: number
   length_s: number
+  sessionStart_s: number
 }
 
-export function getVisualizerCtx(now: PerfTime, visualizer: VisualizerSettings): VisualizerCtx {
-  const visualizerStart_s = now.duration.s() - visualizer.length_s * visualizer.playheadRatio;
-  const visualizerEnd_s = visualizerStart_s + visualizer.length_s;
+export function getVisualizerCtx(now: PerfTime, { visualizer, time, activeSession }: AppState): VisualizerCtx {
+  const cursorTime_s = getCursorTime(now, activeSession).duration.s()
+  const sessionStartTime_s = getSessionStartTime(now, time, activeSession).duration.s()
+
+  const startTime_s = cursorTime_s - visualizer.length_s * visualizer.playheadRatio;
+  const endTime_s = startTime_s + visualizer.length_s;
 
   return {
-    startTime_s: visualizerStart_s,
-    endTime_s: visualizerEnd_s,
-    length_s: visualizer.length_s
+    cursor_s: cursorTime_s,
+    startTime_s,
+    endTime_s,
+    length_s: visualizer.length_s,
+    sessionStart_s: sessionStartTime_s
   }
 }
 
@@ -27,7 +49,6 @@ export interface BeatMarker {
 }
 
 export function getBeatMarkers(
-  start: PerfTime,
   vis: VisualizerCtx,
   tempo: Tempo,
   beatsPerBar: number): BeatMarker[] {
@@ -35,8 +56,8 @@ export function getBeatMarkers(
 
   const period_s = tempo.period.s();
 
-  let beatTime = Math.floor((vis.startTime_s - start.duration.s()) / period_s) * period_s + start.duration.s();
-  let count = (Math.floor((vis.startTime_s - start.duration.s()) / period_s) + 1) % 4
+  let beatTime = Math.floor((vis.startTime_s - vis.sessionStart_s) / period_s) * period_s + vis.sessionStart_s;
+  let count = (Math.floor((vis.startTime_s - vis.sessionStart_s) / period_s) + 1) % 4
 
 
   while (beatTime < vis.endTime_s) {

@@ -4,15 +4,12 @@ import { getBeatMarkers, getVisualizerCtx, getVisualizerRatio, VisualizerCtx } f
 import { clear, drawLine, drawRect, drawText, drawTriangles } from "../canvas2dUtils"
 import { expandLoop } from "@/engine/loop/expandLoop"
 import { SessionEval_t } from "@/engine/loop/SessionEval"
-import { sessionStartTime } from "@/engine/loop/Session"
 
 interface Ctx {
   canvas: CanvasRenderingContext2D,
   vis: VisualizerCtx,
   appState: AppState,
-  cursorTime: PerfTime,
   stats: SessionEval_t,
-  sessionStart: PerfTime
 }
 
 export function drawVisualizer(elem: HTMLCanvasElement, appState: AppState, now: PerfTime, stats: SessionEval_t) {
@@ -22,25 +19,11 @@ export function drawVisualizer(elem: HTMLCanvasElement, appState: AppState, now:
     return
   }
 
-  const sesh = appState.activeSession
-  let sessionStart = sessionStartTime(now, appState.time)
-  let cursorTime = now
-
-  if (sesh) {
-    sessionStart = sesh.start
-    const sessionEnded = sesh.end.lessThan(now)
-    if (sessionEnded) {
-      cursorTime = sesh.end
-    }
-  }
-
   const ctx: Ctx = {
     canvas,
-    vis: getVisualizerCtx(cursorTime, appState.visualizer),
+    vis: getVisualizerCtx(now, appState),
     appState,
-    cursorTime,
-    stats,
-    sessionStart
+    stats
   }
 
   clear(canvas)
@@ -53,8 +36,8 @@ export function drawVisualizer(elem: HTMLCanvasElement, appState: AppState, now:
   drawCursor(ctx)
 }
 
-function drawCursor({ cursorTime, vis, canvas }: Ctx) {
-  const x = getVisualizerRatio(cursorTime.duration.s(), vis)
+function drawCursor({ vis, canvas }: Ctx) {
+  const x = getVisualizerRatio(vis.cursor_s, vis)
 
   drawTriangles({
     color: '#fff',
@@ -66,9 +49,8 @@ function drawCursor({ cursorTime, vis, canvas }: Ctx) {
   // drawLine(res, ratio, 1, 'white', 0.7)
 }
 
-function drawBeatMarkers({ appState, vis, canvas, sessionStart }: Ctx) {
+function drawBeatMarkers({ appState, vis, canvas }: Ctx) {
   getBeatMarkers(
-    sessionStart,
     vis,
     appState.time.tempo,
     4
@@ -93,10 +75,11 @@ function drawPresses({ canvas, vis, appState }: Ctx) {
   }
 }
 
-function drawLoop({ canvas, vis, appState, sessionStart }: Ctx) {
+function drawLoop({ canvas, vis, appState }: Ctx) {
   const { loop, time: { tempo, loopRepeats } } = appState
 
   const playDuration = Duration.s(loop.data.beatLength * tempo.period.s() * loopRepeats)
+  const sessionStart = PerfTime.s(vis.sessionStart_s)
   const end = sessionStart.plus(playDuration)
   const expandedLoop = expandLoop(loop.data, sessionStart, end, tempo)
 
@@ -106,9 +89,8 @@ function drawLoop({ canvas, vis, appState, sessionStart }: Ctx) {
   })
 }
 
-function drawCount({ canvas, vis, appState, sessionStart }: Ctx) {
+function drawCount({ canvas, vis, appState }: Ctx) {
   getBeatMarkers(
-    sessionStart,
     vis,
     appState.time.tempo,
     4 // division depth

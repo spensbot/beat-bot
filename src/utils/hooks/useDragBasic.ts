@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-type Ref = React.MutableRefObject<any>
+type Ref = React.RefObject<any>
 type MouseEventHandler = (e: MouseEvent) => any
 
 export default function useDragBasic(

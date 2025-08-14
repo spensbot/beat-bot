@@ -4,7 +4,10 @@ import {
   setCountInBeats,
   setLoopRepeats,
   setTempo,
+  setVisualizerLength,
   startSession,
+  VISUALIZER_LENGTH_MAX,
+  VISUALIZER_LENGTH_MIN,
 } from "@/redux/appSlice"
 import { useDispatch } from "react-redux"
 import { PerfTime, Tempo } from "@/utils/timeUtils"
@@ -19,6 +22,7 @@ export default function Controls() {
       <TempoSlider />
       <CountInSlider />
       <LoopRepeatsSlider />
+      <VisualizerLengthSlider />
     </div>
   )
 }
@@ -112,6 +116,25 @@ function LoopRepeatsSlider() {
       }}
       label="Loop Repeats"
       valueString={(value) => `${Math.round(value)}`}
+    />
+  )
+}
+
+function VisualizerLengthSlider() {
+  const dispatch = useDispatch()
+  const visualizerLength = useAppState((s) => s.visualizer.length_s)
+
+  return (
+    <LabeledSlider
+      value={visualizerLength}
+      min={VISUALIZER_LENGTH_MIN}
+      max={VISUALIZER_LENGTH_MAX}
+      step={0.1}
+      onChange={(value) => {
+        dispatch(setVisualizerLength(value))
+      }}
+      label="Visualizer Length"
+      valueString={(value) => `${value.toFixed(1)}s`}
     />
   )
 }

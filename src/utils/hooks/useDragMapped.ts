@@ -7,7 +7,7 @@ export interface MappedPos {
   dy: number
 }
 
-type Ref = React.MutableRefObject<any>
+type Ref = React.RefObject<any>
 type MouseEventHandler = (e: MouseEvent) => any
 
 type DragStatus = 'Start' | 'Moved' | 'End'
@@ -16,7 +16,7 @@ type Handler = (mappedPos: MappedPos, e: MouseEvent, status: DragStatus) => void
 
 export default function useDragMapped(
   onChange: Handler
-): [Ref, React.MouseEventHandler<HTMLDivElement>] {
+): [Ref, React.MouseEventHandler<HTMLElement>] {
   const dragContainer = useRef<Element>(null)
 
   const onMouseMove: MouseEventHandler = (e: MouseEvent) => {

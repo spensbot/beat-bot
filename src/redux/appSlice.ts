@@ -7,6 +7,10 @@ import { Press_t } from '@/engine/input/InputEngine'
 import { initSession, Session_t } from '@/engine/loop/Session'
 import { evaluateSession } from '@/engine/loop/SessionEval'
 import { Loop_t } from '@/engine/loop/Loop'
+import { clamp } from '@/utils/math'
+
+export const VISUALIZER_LENGTH_MIN = 2
+export const VISUALIZER_LENGTH_MAX = 30
 
 export const appSlice = createSlice({
   name: 'note',
@@ -43,8 +47,13 @@ export const appSlice = createSlice({
         state.activeSession.eval = evaluateSession(state.activeSession as Session_t, state.loop.data, state.time.tempo as Tempo)
       }
     },
+    setSessionScrubTime: (state, action: PayloadAction<PerfTime>) => {
+      if (state.activeSession) {
+        state.activeSession.scrubTime = action.payload
+      }
+    },
     setVisualizerLength: (state, action: PayloadAction<number>) => {
-      state.visualizer.length_s = action.payload
+      state.visualizer.length_s = clamp(action.payload, VISUALIZER_LENGTH_MIN, VISUALIZER_LENGTH_MAX)
     },
     setLoop: (state, action: PayloadAction<Loop_t>) => {
       state.loop = action.payload
@@ -66,6 +75,7 @@ export const {
   startSession,
   endSession,
   addPress,
+  setSessionScrubTime,
   setVisualizerLength,
   setLoop,
 } = appSlice.actions
