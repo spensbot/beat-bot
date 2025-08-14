@@ -38,10 +38,10 @@ function PlayButton() {
   })
 
   const onClick = () => {
-    if (playState === "playing") {
-      dispatch(endSession())
-    } else {
+    if (playState === "idle") {
       dispatch(startSession(PerfTime.now()))
+    } else {
+      dispatch(endSession())
     }
   }
 
@@ -52,7 +52,7 @@ function PlayButton() {
       case "playing":
         return "Stop"
       case "stopped":
-        return "Restart"
+        return "Reset"
     }
   }
 
@@ -66,6 +66,7 @@ function PlayButton() {
 function TempoSlider() {
   const dispatch = useDispatch()
   const tempo = useAppState((s) => s.time.tempo)
+  const disabled = useAppState((s) => s.activeSession !== undefined)
 
   return (
     <LabeledSlider
@@ -78,6 +79,7 @@ function TempoSlider() {
       }}
       label="BPM"
       valueString={(value) => `${Math.round(value)}`}
+      disabled={disabled}
     />
   )
 }
@@ -85,6 +87,7 @@ function TempoSlider() {
 function CountInSlider() {
   const dispatch = useDispatch()
   const countInBeats = useAppState((s) => s.time.countInBeats)
+  const disabled = useAppState((s) => s.activeSession !== undefined)
 
   return (
     <LabeledSlider
@@ -97,6 +100,7 @@ function CountInSlider() {
       }}
       label="Count In Beats"
       valueString={(value) => `${Math.round(value)}`}
+      disabled={disabled}
     />
   )
 }
@@ -104,6 +108,7 @@ function CountInSlider() {
 function LoopRepeatsSlider() {
   const dispatch = useDispatch()
   const loopRepeats = useAppState((s) => s.time.loopRepeats)
+  const disabled = useAppState((s) => s.activeSession !== undefined)
 
   return (
     <LabeledSlider
@@ -116,6 +121,7 @@ function LoopRepeatsSlider() {
       }}
       label="Loop Repeats"
       valueString={(value) => `${Math.round(value)}`}
+      disabled={disabled}
     />
   )
 }
@@ -133,7 +139,7 @@ function VisualizerLengthSlider() {
       onChange={(value) => {
         dispatch(setVisualizerLength(value))
       }}
-      label="Visualizer Length"
+      label="Zoom"
       valueString={(value) => `${value.toFixed(1)}s`}
     />
   )

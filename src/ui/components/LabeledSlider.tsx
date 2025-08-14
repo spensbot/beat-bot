@@ -8,6 +8,7 @@ interface Props {
   min: number
   max: number
   step?: number
+  disabled?: boolean
 }
 
 export function LabeledSlider({
@@ -18,6 +19,7 @@ export function LabeledSlider({
   min,
   max,
   step,
+  disabled = false,
 }: Props) {
   return (
     <div className="flex flex-col gap-1 items-start">
@@ -37,6 +39,7 @@ export function LabeledSlider({
           onChange(value[0])
         }}
         className="w-50"
+        disabled={disabled}
       />
     </div>
   )
