@@ -45,14 +45,16 @@ export class Engine {
   syncAudio() {
     const appState = store.getState().app
 
-    if (appState.activeSession) {
-      const delta = PerfTime.now().delta(appState.activeSession.start)
+    const sesh = appState.activeSession
+
+    if (sesh) {
+      const delta = PerfTime.now().delta(sesh.start)
 
       const period_s = appState.time.tempo.period.s()
       const nextBeat = Math.floor(delta.s() / period_s) + 1
-      const nextMetronomeTime = appState.activeSession.start.plus(Duration.s(nextBeat * period_s))
+      const nextMetronomeTime = sesh.start.plus(Duration.s(nextBeat * period_s))
 
-      if (!this._nextMetronomeTime.approxEquals(nextMetronomeTime, 0.01)) {
+      if (!this._nextMetronomeTime.approxEquals(nextMetronomeTime, 0.01) && nextMetronomeTime.lessThan(sesh.end)) {
         this._nextMetronomeTime = nextMetronomeTime
         this.audioEngine.playMetronomeSound(appState.metronome.gain, nextMetronomeTime)
       }
