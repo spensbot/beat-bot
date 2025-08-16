@@ -25,6 +25,8 @@ export interface VisualizerCtx {
   endTime_s: number
   length_s: number
   sessionStart_s: number
+  countStart_s: number
+  countEnd_s: number
 }
 
 export function getVisualizerCtx(now: PerfTime, { visualizer, time, activeSession }: AppState): VisualizerCtx {
@@ -34,12 +36,17 @@ export function getVisualizerCtx(now: PerfTime, { visualizer, time, activeSessio
   const startTime_s = cursorTime_s - visualizer.length_s * visualizer.playheadRatio;
   const endTime_s = startTime_s + visualizer.length_s;
 
+  const countStart_s = sessionStartTime_s - time.countInBeats * time.tempo.period.s();
+  const countEnd_s = activeSession?.end.duration.s() ?? Infinity
+
   return {
     cursor_s: cursorTime_s,
     startTime_s,
     endTime_s,
     length_s: visualizer.length_s,
-    sessionStart_s: sessionStartTime_s
+    sessionStart_s: sessionStartTime_s,
+    countStart_s,
+    countEnd_s
   }
 }
 
@@ -51,7 +58,8 @@ export interface BeatMarker {
 export function getBeatMarkers(
   vis: VisualizerCtx,
   tempo: Tempo,
-  beatsPerBar: number): BeatMarker[] {
+  beatsPerBar: number
+): BeatMarker[] {
   const markers: BeatMarker[] = []
 
   const period_s = tempo.period.s();
@@ -61,10 +69,12 @@ export function getBeatMarkers(
 
 
   while (beatTime < vis.endTime_s) {
-    markers.push({
-      time_s: beatTime,
-      count
-    })
+    if (beatTime > (vis.countStart_s - 0.01) && beatTime < (vis.countEnd_s - 0.01)) {
+      markers.push({
+        time_s: beatTime,
+        count
+      })
+    }
     beatTime += period_s;
     count += 1
     if (count > beatsPerBar) count = 1
