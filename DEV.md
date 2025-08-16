@@ -2,8 +2,6 @@
 
 ## Todos
 
-- Fix overflow bug
-- Don't render markers outside exercise
 - % - based stats
   - % of beat time
   - % of hit space
@@ -21,7 +19,6 @@
 - Loops with multiple inputs
   - Left/right. Snare/kick, etc.
 - Loop instrument type
-
 
 ... later
 

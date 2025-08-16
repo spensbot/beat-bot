@@ -1,5 +1,4 @@
 import { PerfTime, Tempo } from "@/utils/timeUtils";
-import { Loop_t } from "../loop/Loop";
 import { LoopNote_t } from "../loop/LoopData";
 import { Session_t, sessionStartTimeFromNow } from "../loop/Session";
 import { AppState, TimeSettings } from "../AppState";
@@ -67,7 +66,6 @@ export function getBeatMarkers(
   let beatTime = Math.floor((vis.startTime_s - vis.sessionStart_s) / period_s) * period_s + vis.sessionStart_s;
   let count = (Math.floor((vis.startTime_s - vis.sessionStart_s) / period_s) + 1) % 4
 
-
   while (beatTime < vis.endTime_s) {
     if (beatTime > (vis.countStart_s - 0.01) && beatTime < (vis.countEnd_s - 0.01)) {
       markers.push({
@@ -90,28 +88,4 @@ export function getVisualizerRatio(time_s: number, vis: VisualizerCtx): number {
 export interface LoopMarker {
   time_s: number;
   note: LoopNote_t // The divisor for the beat marker (e.g., 1, 2, 4, 8)
-}
-
-export function getLoopMarkers(
-  start: PerfTime,
-  vis: VisualizerCtx,
-  loop: Loop_t,
-  tempo: Tempo): LoopMarker[] {
-  const markers: LoopMarker[] = []
-
-  const loopPeriod_s = loop.data.beatLength * tempo.period.s();
-
-  let loopStartTime = Math.floor((vis.startTime_s - start.duration.s()) / loopPeriod_s) * loopPeriod_s + start.duration.s();
-
-  while (loopStartTime < vis.endTime_s) {
-    loop.data.notes.forEach(note => {
-      markers.push({
-        note,
-        time_s: loopStartTime + note.beatTime * tempo.period.s()
-      })
-    })
-    loopStartTime += loopPeriod_s;
-  }
-
-  return markers
 }

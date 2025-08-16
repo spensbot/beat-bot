@@ -15,7 +15,7 @@ export function expandLoop(loop: LoopData_t, start: PerfTime, end: PerfTime, tem
   const beat_s = tempo.period.s() // Seconds per beat
   const loop_s = loop.beatLength * beat_s
 
-  const loopCount = Math.ceil((end_s - start_s) / loop_s)
+  const loopCount = Math.ceil((end_s - start_s - 0.01) / loop_s)
 
   for (let i = 0; i < loopCount; i++) {
     const offset_s = i * loop_s
