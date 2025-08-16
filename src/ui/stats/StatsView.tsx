@@ -12,7 +12,7 @@ export default function StatsView() {
     : "-"
   const deltaAvg = stats ? `${(stats.delta_avg_s * 1000).toFixed(1)}ms` : "-"
   const deltaText =
-    stats === undefined ? "" : stats.delta_avg_s < 0 ? "Leading" : "Lagging"
+    stats === undefined ? "" : stats.delta_avg_s < 0 ? "Early" : "Late"
 
   return (
     <div className="flex flex-col gap-1 w-50">

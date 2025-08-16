@@ -1,4 +1,8 @@
 import { lerp } from "./math"
+import RollingAverage from "./RollingAverage"
+
+/** WARNING: This is a hack. timeDelta_perfToAudio won't work for multiple contexts */
+let avgTimeDelta: RollingAverage | null = null
 
 export class Duration {
   private seconds
@@ -68,8 +72,15 @@ export class Tempo {
   }
 }
 
-// DOMHighResTimesStamp from performance.now()
-// https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp
+/** DOMHighResTimesStamp from performance.now() 
+ * https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp 
+ * 
+ * Considered the source of truth for the user's perceived time.
+ * 
+ * When a source has latency
+ * (e.g. keyboard input latency, audio output latency, video rendering latency) 
+ * do our best to account for that latency when creating a PerfTime.
+ * */
 export class PerfTime {
   duration: Duration
 
@@ -85,10 +96,11 @@ export class PerfTime {
     return new PerfTime(Duration.ms(window.performance.now()))
   }
 
-  // I havne't found docs to confirm. But many sources mention that the midi timestamp
-  // is based on the same DOMHighResTimeStamp as window.performance.now()
-  static fromEvent(event: Event): PerfTime {
-    return new PerfTime(Duration.ms(event.timeStamp))
+  /** According to AI, Input latency can vary widely 
+   * (~5-15 ms for wired devices, ~20-30 ms for wireless devices) 
+   * This function allows you to manually account for that latency */
+  static fromEvent(event: Event, latency_ms: number = 5): PerfTime {
+    return new PerfTime(Duration.ms(event.timeStamp - latency_ms))
   }
 
   plus(duration: Duration): PerfTime {
@@ -117,10 +129,7 @@ export class PerfTime {
   }
 
   toAudioTime(ctx: AudioContext): AudioTime {
-    const audioNow = AudioTime.now(ctx).duration
-    const perfNow = PerfTime.now().duration
-    const delta = audioNow.minus(perfNow)
-    return new AudioTime(this.duration.plus(delta))
+    return new AudioTime(this.duration.minus(timeDelta_perfToAudio(ctx)))
   }
 
   approxEquals(other: PerfTime, epsilon: number = 0.001): boolean {
@@ -129,8 +138,10 @@ export class PerfTime {
 }
 
 /** Web Audio Context currentTime property
-https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/currentTime
-*/
+ * https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/currentTime
+ * 
+ * Note that the user will hear the sound after some amount of latency
+ */
 export class AudioTime {
   duration: Duration
 
@@ -151,9 +162,23 @@ export class AudioTime {
   }
 
   toPerf(ctx: AudioContext): PerfTime {
-    const perfNow = PerfTime.now().duration
-    const audioNow = AudioTime.now(ctx).duration
-    const delta = perfNow.minus(audioNow)
-    return new PerfTime(this.duration.plus(delta))
+    return new PerfTime(this.duration.plus(timeDelta_perfToAudio(ctx)))
   }
+}
+
+export function timeDelta_perfToAudio(ctx: AudioContext): Duration {
+  const perfNow = PerfTime.now().duration
+  const audioNow = AudioTime.now(ctx).duration
+  const delta = perfNow.minus(audioNow)
+  if (avgTimeDelta) {
+    avgTimeDelta.push(delta.s())
+  } else {
+    avgTimeDelta = new RollingAverage(delta.s(), 0.01)
+  }
+  return Duration.s(avgTimeDelta.get()).plus(audioLatency(ctx))
+}
+
+/** The latency between the audio context currentTime and when the user hears the sound */
+function audioLatency(ctx: AudioContext): Duration {
+  return Duration.s(ctx.baseLatency + ctx.outputLatency)
 }

@@ -14,6 +14,7 @@ import { PerfTime, Tempo } from "@/utils/timeUtils"
 import { useAppState } from "@/redux/hooks"
 import { LabeledSlider } from "../components/LabeledSlider"
 import { useAnimatedValue } from "@/utils/hooks/useAnimationFrame"
+import AdvancedControls from "./AdvancedControls"
 
 export default function Controls() {
   return (
@@ -23,6 +24,7 @@ export default function Controls() {
       <CountInSlider />
       <LoopRepeatsSlider />
       <VisualizerLengthSlider />
+      <AdvancedControls />
     </div>
   )
 }

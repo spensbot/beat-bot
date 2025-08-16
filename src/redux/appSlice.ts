@@ -62,6 +62,9 @@ export const appSlice = createSlice({
         state.pastSessions.push(state.activeSession)
         state.activeSession = undefined
       }
+    },
+    setInputLatency: (state, action: PayloadAction<number>) => {
+      state.hardware.inputLatency_ms = action.payload
     }
   },
 })
@@ -78,6 +81,7 @@ export const {
   setSessionScrubTime,
   setVisualizerLength,
   setLoop,
+  setInputLatency
 } = appSlice.actions
 
 export default appSlice.reducer

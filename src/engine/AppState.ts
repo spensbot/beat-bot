@@ -11,6 +11,7 @@ export interface AppState {
   loop: Loop_t
   activeSession?: Session_t
   pastSessions: Session_t[]
+  hardware: HardwareSettings // Settings for the hardware input
 }
 
 export interface TimeSettings {
@@ -21,6 +22,10 @@ export interface TimeSettings {
 
 export interface MetronomeSettings {
   gain: number // Volume of the metronome
+}
+
+export interface HardwareSettings {
+  inputLatency_ms: number
 }
 
 export const initialState: AppState = {
@@ -38,4 +43,7 @@ export const initialState: AppState = {
   },
   loop: defaultLoops[1],
   pastSessions: [],
+  hardware: {
+    inputLatency_ms: 5, // Latency of the hardware input in milliseconds
+  },
 }

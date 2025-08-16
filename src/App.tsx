@@ -1,5 +1,5 @@
 import Controls from "./ui/controls/Controls"
-// import Debugger from "./ui/debugger/Debugger"
+import Debugger from "./ui/debugger/Debugger"
 import Visualizer from "./ui/visualizer/Visualizer"
 import "./engine/engine"
 import StatsView from "./ui/stats/StatsView"
@@ -11,7 +11,6 @@ function App() {
       <Visualizer />
       <div className="min-h-0 grow shrink flex flex-row gap-4 px-4">
         <Controls />
-        {/* <Debugger /> */}
         <StatsView />
         <LoopSelectView className="h-full grow overflow-y-scroll" />
       </div>
