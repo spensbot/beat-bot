@@ -1,5 +1,4 @@
 import Controls from "./ui/controls/Controls"
-import Debugger from "./ui/debugger/Debugger"
 import Visualizer from "./ui/visualizer/Visualizer"
 import "./engine/engine"
 import StatsView from "./ui/stats/StatsView"

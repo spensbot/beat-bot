@@ -5,6 +5,8 @@ import { getAudioContext } from '../engine/audio/audioUtils'
 
 class AudioContextMock {
   currentTime = 1
+  baseLatency = 0
+  outputLatency = 0
 }
 
 vi.stubGlobal('window', {

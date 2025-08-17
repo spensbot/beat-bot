@@ -1,8 +1,7 @@
-import { Duration, PerfTime } from "@/utils/timeUtils";
+import { PerfTime } from "@/utils/timeUtils";
 import { Press_t } from "../input/InputEngine";
-import { emptySessionEval, SessionEval_t } from "./SessionEval";
 import { Loop_t } from "./Loop";
-import { AppState, TimeSettings } from "../AppState";
+import { TimeSettings } from "../AppState";
 
 // const afterBuffer = Duration.s(0.5) // How long after the loop ends to consider presses valid
 
@@ -10,7 +9,6 @@ export interface Session_t {
   start: PerfTime // Where beat 0 begins
   end: PerfTime
   presses: Press_t[]
-  eval: SessionEval_t
   scrubTime?: PerfTime
 }
 
@@ -28,7 +26,6 @@ export function initSession(now: PerfTime, loop: Loop_t, time: TimeSettings): Se
   return {
     start,
     end,
-    presses: [],
-    eval: emptySessionEval(),
+    presses: []
   };
 }

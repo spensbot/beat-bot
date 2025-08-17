@@ -1,4 +1,4 @@
-import { lerp } from "./math"
+import { clamp, clampOptional, lerp } from "./math"
 import RollingAverage from "./RollingAverage"
 
 /** WARNING: This is a hack. timeDelta_perfToAudio won't work for multiple contexts */
@@ -45,6 +45,10 @@ export class Duration {
 
   abs(): Duration {
     return Duration.s(Math.abs(this.s()))
+  }
+
+  clamp(min: Duration | null, max: Duration | null): Duration {
+    return Duration.s(clampOptional(this.seconds, min?.seconds ?? null, max?.seconds ?? null))
   }
 }
 
@@ -134,6 +138,10 @@ export class PerfTime {
 
   approxEquals(other: PerfTime, epsilon: number = 0.001): boolean {
     return Math.abs(this.duration.s() - other.duration.s()) < epsilon
+  }
+
+  clamp(min: PerfTime | null, max?: PerfTime | null): PerfTime {
+    return new PerfTime(this.duration.clamp(min?.duration ?? null, max?.duration ?? null))
   }
 }
 

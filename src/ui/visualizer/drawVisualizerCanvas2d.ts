@@ -46,7 +46,7 @@ function drawCursor({ vis, canvas }: Ctx) {
     ctx: canvas,
     x
   })
-  // drawLine(res, ratio, 1, 'white', 0.7)
+  drawLine(canvas, x, 1, '#fff5', 0.8)
 }
 
 function drawBeatMarkers({ appState, vis, canvas }: Ctx) {

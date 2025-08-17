@@ -29,3 +29,9 @@ export function clamp(val: number, min: number, max: number): number {
   if (val > max) return max
   return val
 }
+
+export function clampOptional(val: number, min: number | null, max: number | null): number {
+  if (min !== null && val < min) return min
+  if (max !== null && val > max) return max
+  return val
+}

@@ -23,3 +23,7 @@ export function insertBetween<T, U>(list: T[], gap: U): (T | U)[] {
   }
   return out
 }
+
+export function last<T>(list: T[]): (T | undefined) {
+  return list[list.length - 1]
+}

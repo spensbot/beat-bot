@@ -2,15 +2,6 @@
 
 ## Todos
 
-- % - based stats
-  - % of beat time
-  - % of hit space
-- Score (combination of)
-  - plus for each hit (weighted by % accuracy)
-  - no score for a miss
-  - minus for each extra
-- Matches -> Mistakes
-  - Extra hit or missed hit
 - Persist state
 - Historical stats
   - Overall history

@@ -21,10 +21,12 @@ export function expandLoop(loop: LoopData_t, start: PerfTime, end: PerfTime, tem
     const offset_s = i * loop_s
     loop.notes.forEach(note => {
       const beatTime = start_s + offset_s + note.beatTime * beat_s
-      unrolled.push({
-        time: PerfTime.s(beatTime),
-        loopNote: note
-      })
+      if (beatTime > (start_s - 0.01) && beatTime < (end_s + 0.01)) {
+        unrolled.push({
+          time: PerfTime.s(beatTime),
+          loopNote: note
+        })
+      }
     })
   }
 

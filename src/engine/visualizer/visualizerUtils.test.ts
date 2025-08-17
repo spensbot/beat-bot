@@ -1,8 +1,12 @@
-// import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 // import { getBeatMarkers, getVisualizerCtx, getVisualizerRatio, VisualizerCtx } from "./visualizerUtils";
 // import { PerfTime, Tempo } from "@/utils/timeUtils";
 // import { VisualizerSettings } from "./VisualizerSettings";
 // import { Loop_t } from "../loop/Loop";
+
+describe("Temp", () => {
+  it("should work", () => { })
+})
 
 // describe("getVisualizerCtx", () => {
 //   it("should calculate the correct visualizer context", () => {
