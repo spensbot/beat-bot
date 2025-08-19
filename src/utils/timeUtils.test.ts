@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { vi } from 'vitest'
-import { Tempo, Duration, AudioTime, PerfTime } from './timeUtils'
+import { Tempo, Duration, AudioTime, PerfTime, getPeriod_s, beatsToDuration, durationToBeats } from './timeUtils'
 import { getAudioContext } from '../engine/audio/audioUtils'
 
 class AudioContextMock {
@@ -26,20 +26,16 @@ test('Duration.ms()', () => {
   expect(Duration.ms(1000).ms()).toBe(1000)
 })
 
-test('Tempo.bpm()', () => {
-  expect(Tempo.bpm(120).bpm()).toBe(120)
-})
-
 test('Tempo.period()', () => {
-  expect(Tempo.bpm(120).period.s()).toBe(0.5)
+  expect(getPeriod_s({ bpm: 120 })).toBe(0.5)
 })
 
 test('Tempo.beatsToDuration()', () => {
-  expect(Tempo.bpm(120).beatsToDuration(2).s()).toBe(1)
+  expect(beatsToDuration({ bpm: 120 }, 2).s()).toBe(1)
 })
 
 test('Tempo.durationToBeats()', () => {
-  expect(Tempo.bpm(120).durationToBeats(Duration.s(1))).toBe(2)
+  expect(durationToBeats({ bpm: 120 }, Duration.s(1))).toBe(2)
 })
 
 test('PerfTime.now()', () => {

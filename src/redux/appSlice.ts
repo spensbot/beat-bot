@@ -4,8 +4,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { PerfTime, Tempo } from '@/utils/timeUtils'
 import { initialState, TimeSettings } from '@/engine/AppState'
 import { Press_t } from '@/engine/input/InputEngine'
-import { initSession, Session_t } from '@/engine/loop/Session'
-import { evaluateSession } from '@/engine/loop/SessionEval'
+import { initSession } from '@/engine/loop/Session'
 import { Loop_t } from '@/engine/loop/Loop'
 import { clamp } from '@/utils/math'
 
@@ -42,10 +41,6 @@ export const appSlice = createSlice({
     },
     addPress: (state, action: PayloadAction<Press_t>) => {
       state.activeSession?.presses.push(action.payload)
-
-      if (state.activeSession) {
-        state.activeSession.eval = evaluateSession(state.activeSession as Session_t, state.loop.data, state.time.tempo as Tempo)
-      }
     },
     setSessionScrubTime: (state, action: PayloadAction<PerfTime>) => {
       if (state.activeSession) {

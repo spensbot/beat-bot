@@ -39,7 +39,7 @@ export type HardwareSettings = z.infer<typeof HardwareSettingsSchema>
 
 export const initialState: AppState = {
   time: {
-    tempo: Tempo.bpm(90),
+    tempo: { bpm: 120 }, // Default tempo
     countInBeats: 4, // How many beats to count in before starting the loop
     loopRepeats: 4, // How many times the loop should repeat
   },

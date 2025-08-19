@@ -52,28 +52,20 @@ export class Duration {
   }
 }
 
-export class Tempo {
-  period: Duration
+export interface Tempo {
+  bpm: number
+}
 
-  private constructor(period: Duration) {
-    this.period = period
-  }
+export function getPeriod_s(tempo: Tempo) {
+  return 60 / tempo.bpm
+}
 
-  static bpm(bpm: number): Tempo {
-    return new Tempo(Duration.s(60 / bpm))
-  }
+export function beatsToDuration(tempo: Tempo, beats: number): Duration {
+  return Duration.s(beats * getPeriod_s(tempo))
+}
 
-  bpm(): number {
-    return 60 / this.period.s()
-  }
-
-  beatsToDuration(beats: number): Duration {
-    return Duration.s(beats * this.period.s())
-  }
-
-  durationToBeats(duration: Duration): number {
-    return duration.s() / this.period.s()
-  }
+export function durationToBeats(tempo: Tempo, duration: Duration): number {
+  return duration.s() / getPeriod_s(tempo)
 }
 
 /** DOMHighResTimesStamp from performance.now() 

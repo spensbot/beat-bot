@@ -1,4 +1,4 @@
-import { PerfTime, Tempo } from "@/utils/timeUtils"
+import { getPeriod_s, PerfTime, Tempo } from "@/utils/timeUtils"
 import { LoopData_t, LoopNote_t } from "./LoopData"
 
 export interface ExpandedNote_t {
@@ -12,7 +12,7 @@ export function expandLoop(loop: LoopData_t, start: PerfTime, end: PerfTime, tem
   // Everything in seconds for easy math
   const start_s = start.duration.s()
   const end_s = end.duration.s()
-  const beat_s = tempo.period.s() // Seconds per beat
+  const beat_s = getPeriod_s(tempo) // Seconds per beat
   const loop_s = loop.beatLength * beat_s
 
   const loopCount = Math.ceil((end_s - start_s - 0.01) / loop_s)

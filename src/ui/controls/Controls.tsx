@@ -72,12 +72,12 @@ function TempoSlider() {
 
   return (
     <LabeledSlider
-      value={tempo.bpm()}
+      value={tempo.bpm}
       min={40}
       max={240}
       step={1}
       onChange={(value) => {
-        dispatch(setTempo(Tempo.bpm(value)))
+        dispatch(setTempo({ bpm: value }))
       }}
       label="BPM"
       valueString={(value) => `${Math.round(value)}`}

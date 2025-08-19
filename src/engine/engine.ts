@@ -3,7 +3,7 @@ import onNextGesture from "./onNextGesture"
 import { store } from '../redux/store'
 import { addPress } from "../redux/appSlice"
 import { InputEngine, Press_t } from "./input/InputEngine"
-import { Duration, PerfTime } from "@/utils/timeUtils"
+import { Duration, getPeriod_s, PerfTime } from "@/utils/timeUtils"
 
 export class Engine {
   audioEngine: AudioEngine = new AudioEngine()
@@ -50,7 +50,7 @@ export class Engine {
     if (sesh) {
       const delta = PerfTime.now().delta(sesh.start)
 
-      const period_s = appState.time.tempo.period.s()
+      const period_s = getPeriod_s(appState.time.tempo)
       const nextBeat = Math.floor(delta.s() / period_s) + 1
       const nextMetronomeTime = sesh.start.plus(Duration.s(nextBeat * period_s))
 

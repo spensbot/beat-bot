@@ -1,4 +1,4 @@
-import { PerfTime, Tempo } from "@/utils/timeUtils";
+import { PerfTime, getPeriod_s, Tempo } from "@/utils/timeUtils";
 import { LoopNote_t } from "../loop/LoopData";
 import { Session_t, sessionStartTimeFromNow } from "../loop/Session";
 import { AppState, TimeSettings } from "../AppState";
@@ -35,7 +35,7 @@ export function getVisualizerCtx(now: PerfTime, { visualizer, time, activeSessio
   const startTime_s = cursorTime_s - visualizer.length_s * visualizer.playheadRatio;
   const endTime_s = startTime_s + visualizer.length_s;
 
-  const countStart_s = sessionStartTime_s - time.countInBeats * time.tempo.period.s();
+  const countStart_s = sessionStartTime_s - time.countInBeats * getPeriod_s(time.tempo);
   const countEnd_s = activeSession?.end.duration.s() ?? Infinity
 
   return {
@@ -61,7 +61,7 @@ export function getBeatMarkers(
 ): BeatMarker[] {
   const markers: BeatMarker[] = []
 
-  const period_s = tempo.period.s();
+  const period_s = getPeriod_s(tempo);
 
   let beatTime = Math.floor((vis.startTime_s - vis.sessionStart_s) / period_s) * period_s + vis.sessionStart_s;
   let count = (Math.floor((vis.startTime_s - vis.sessionStart_s) / period_s) + 1) % 4

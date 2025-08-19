@@ -1,4 +1,4 @@
-import { Duration, PerfTime } from "@/utils/timeUtils"
+import { Duration, PerfTime, getPeriod_s } from "@/utils/timeUtils"
 import { AppState } from "@/engine/AppState"
 import { getBeatMarkers, getVisualizerCtx, getVisualizerRatio, VisualizerCtx } from "@/engine/visualizer/visualizerUtils"
 import { clear, drawLine, drawRect, drawText, drawTriangles } from "../canvas2dUtils"
@@ -78,7 +78,7 @@ function drawPresses({ canvas, vis, appState }: Ctx) {
 function drawLoop({ canvas, vis, appState }: Ctx) {
   const { loop, time: { tempo, loopRepeats } } = appState
 
-  const playDuration = Duration.s(loop.data.beatLength * tempo.period.s() * loopRepeats)
+  const playDuration = Duration.s(loop.data.beatLength * getPeriod_s(tempo) * loopRepeats)
   const sessionStart = PerfTime.s(vis.sessionStart_s)
   const end = sessionStart.plus(playDuration)
   const expandedLoop = expandLoop(loop.data, sessionStart, end, tempo)

@@ -8,8 +8,7 @@ describe('expandLoop', () => {
     const loop = loopData(4, [1])
     const start = PerfTime.s(0)
     const end = PerfTime.s(4)
-    const tempo = Tempo.bpm(60) // 60 BPM = 1 beat per second
-    const result = expandLoop(loop, start, end, tempo)
+    const result = expandLoop(loop, start, end, bpm60)
     expect(result).toEqual([note(1, 1)])
   })
 
@@ -17,8 +16,7 @@ describe('expandLoop', () => {
     const loop = loopData(4, [1, 3])
     const start = PerfTime.s(0)
     const end = PerfTime.s(4)
-    const tempo = Tempo.bpm(60) // 60 BPM = 1 beat per second
-    const result = expandLoop(loop, start, end, tempo)
+    const result = expandLoop(loop, start, end, bpm60)
     expect(result).toEqual([
       note(1, 1),
       note(3, 3)
@@ -29,8 +27,7 @@ describe('expandLoop', () => {
     const loop = loopData(4, [1])
     const start = PerfTime.s(0)
     const end = PerfTime.s(8)
-    const tempo = Tempo.bpm(60) // 60 BPM = 1 beat per second
-    const result = expandLoop(loop, start, end, tempo)
+    const result = expandLoop(loop, start, end, bpm60)
     expect(result).toEqual([
       note(1, 1),
       note(5, 1)
@@ -41,8 +38,7 @@ describe('expandLoop', () => {
     const loop = loopData(4, [])
     const start = PerfTime.s(0)
     const end = PerfTime.s(4)
-    const tempo = Tempo.bpm(60) // 60 BPM = 1 beat per second
-    const result = expandLoop(loop, start, end, tempo)
+    const result = expandLoop(loop, start, end, bpm60)
     expect(result).toEqual([])
   })
 
@@ -55,7 +51,7 @@ describe('expandLoop', () => {
   })
 })
 
-const bpm60 = Tempo.bpm(60)
+const bpm60: Tempo = { bpm: 60 }
 
 function note(time_s: number, loopBeatTime: number): ExpandedNote_t {
   return {

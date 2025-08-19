@@ -9,7 +9,7 @@ describe('evaluateSession', () => {
   test('should correctly match presses to notes and calculate stats', () => {
     const loop = loopData(4, [1, 3])
     const session = makeSession(0, 4, [1.1, 3.2])
-    const tempo = Tempo.bpm(60)
+    const tempo = { bpm: 60 }
     const result = evaluateSession(session, loop, tempo)
     const stats = getSessionStats(result)
 
@@ -22,7 +22,7 @@ describe('evaluateSession', () => {
   test('should handle extra presses correctly', () => {
     const loop = loopData(4, [1])
     const session = makeSession(0, 4, [1.1, 2.5])
-    const tempo = Tempo.bpm(60)
+    const tempo: Tempo = { bpm: 60 }
     const result = evaluateSession(session, loop, tempo)
     const stats = getSessionStats(result)
 
@@ -35,7 +35,7 @@ describe('evaluateSession', () => {
   test('should return empty stats when no presses or notes exist', () => {
     const loop = loopData(4, [])
     const session = makeSession(0, 4, [])
-    const tempo = Tempo.bpm(60)
+    const tempo = { bpm: 60 }
     const result = evaluateSession(session, loop, tempo)
     const stats = getSessionStats(result)
 

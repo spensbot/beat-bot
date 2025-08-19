@@ -1,4 +1,4 @@
-import { PerfTime } from "@/utils/timeUtils";
+import { beatsToDuration, PerfTime } from "@/utils/timeUtils";
 import { Press_t } from "../input/InputEngine";
 import { Loop_t } from "./Loop";
 import { TimeSettings } from "../AppState";
@@ -13,13 +13,13 @@ export interface Session_t {
 }
 
 export function sessionStartTimeFromNow(now: PerfTime, time: TimeSettings): PerfTime {
-  const countInTime = time.tempo.beatsToDuration(time.countInBeats)
+  const countInTime = beatsToDuration(time.tempo, time.countInBeats)
   return now.plus(countInTime)
 }
 
 export function initSession(now: PerfTime, loop: Loop_t, time: TimeSettings): Session_t {
   const start = sessionStartTimeFromNow(now, time)
-  const loopDuration = time.tempo.beatsToDuration(loop.data.beatLength * time.loopRepeats);
+  const loopDuration = beatsToDuration(time.tempo, loop.data.beatLength * time.loopRepeats);
   const end = start.plus(loopDuration)
   // const end = start.plus(loopDuration.plus(afterBuffer))
 
