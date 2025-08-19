@@ -13,8 +13,6 @@ export class Engine {
   private _sessionStartTime: PerfTime = PerfTime.s(0)
 
   init() {
-    console.log('Engine init()')
-
     this.audioEngine.init()
     this.inputEngine.init((press: Press_t) => {
       store.dispatch(addPress(press))

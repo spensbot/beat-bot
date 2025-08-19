@@ -1,12 +1,15 @@
-export interface LoopNote_t {
-  // Could add note, duration, velocity, etc in future
-  beatTime: number // beats. Should be less than loop length.
-}
+import * as z from 'zod'
 
-export interface LoopData_t {
-  beatLength: number // beats
-  notes: LoopNote_t[] // beats. start inclusive, end exclusive.
-}
+export const LoopNoteSchema = z.object({
+  beatTime: z.number().min(0, "Beat time must be at least 0")
+})
+export type LoopNote_t = z.infer<typeof LoopNoteSchema>
+
+export const LoopDataSchema = z.object({
+  beatLength: z.number().min(0, "Beat length must be at least 0"),
+  notes: z.array(LoopNoteSchema)
+})
+export type LoopData_t = z.infer<typeof LoopDataSchema>
 
 export function loopData(beatLength: number, beatTimes: number[]): LoopData_t {
   return {

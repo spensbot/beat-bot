@@ -1,24 +1,15 @@
-import { Tempo } from '../utils/timeUtils'
-import { Loop_t } from './loop/Loop'
+import { TempoSchema } from '../utils/timeUtils'
+import { LoopSchema } from './loop/Loop'
 import { Session_t } from './loop/Session'
+import { SessionStatsSchema } from './loop/SessionEval'
 import { defaultLoops } from './loop/defaultLoops'
 import * as z from 'zod'
 
-export interface AppState {
-  time: TimeSettings // General app settings
-  metronome: MetronomeSettings // Settings for the metronome
-  visualizer: VisualizerSettings
-  loop: Loop_t
-  activeSession?: Session_t
-  pastSessions: Session_t[]
-  hardware: HardwareSettings // Settings for the hardware input
-}
-
-export interface TimeSettings {
-  tempo: Tempo
-  countInBeats: number
-  loopRepeats: number
-}
+export const TimeSettingsSchema = z.object({
+  tempo: TempoSchema,
+  countInBeats: z.number().min(0, "Count in beats must be at least 0"),
+  loopRepeats: z.number().min(1, "Loop repeats must be at least 1")
+})
 
 export const VisualizerSettingsSchema = z.object({
   length_s: z.number().min(0), // how many seconds can be seen on the visualizer at once
@@ -33,9 +24,23 @@ export const HardwareSettingsSchema = z.object({
   inputLatency_ms: z.number().min(0) // Latency of the hardware input
 })
 
+export type TimeSettings = z.infer<typeof TimeSettingsSchema>
 export type VisualizerSettings = z.infer<typeof VisualizerSettingsSchema>
 export type MetronomeSettings = z.infer<typeof MetronomeSettingsSchema>
 export type HardwareSettings = z.infer<typeof HardwareSettingsSchema>
+
+export const PersistedAppStateSchema = z.object({
+  time: TimeSettingsSchema,
+  metronome: MetronomeSettingsSchema,
+  visualizer: VisualizerSettingsSchema,
+  loop: LoopSchema,
+  sessionStatsByLoopId: z.record(z.string(), z.array(SessionStatsSchema)),
+  hardware: HardwareSettingsSchema,
+})
+
+export type AppState = z.infer<typeof PersistedAppStateSchema> & {
+  activeSession?: Session_t // Active session can be undefined
+}
 
 export const initialState: AppState = {
   time: {
@@ -51,7 +56,7 @@ export const initialState: AppState = {
     playheadRatio: 0.33,
   },
   loop: defaultLoops[1],
-  pastSessions: [],
+  sessionStatsByLoopId: {},
   hardware: {
     inputLatency_ms: 5, // Latency of the hardware input in milliseconds
   },

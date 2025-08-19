@@ -6,6 +6,7 @@ import { Stats } from "@/utils/Stats";
 import { LoopData_t } from "./LoopData";
 import { last, sum } from "@/utils/listUtils";
 import { clamp } from "@/utils/math";
+import z from "zod";
 
 /** The number of seconds that a press can register as a match outside the bounds of the session */
 const OVERFLOW_S = 0.5
@@ -91,20 +92,19 @@ export function evaluateSession(
   }
 }
 
-export interface SessionStats_t {
-  nTargets: number
-  nMatches: number
-  nMistakes: number
-  delta_avg_s: number
-  delta_stdDev_s: number
-  delta_avg_ratio: number
-  delta_stdDev_ratio: number
-  /** The session score is a value from 0 to 1
-   * A score of 1 is achieved by hitting all notes with perfect accuracy.
-   * A note's worth of score is deduced for each mistake (miss or extra press)
-   */
-  score: number
-}
+export const SessionStatsSchema = z.object({
+  nTargets: z.number().int().min(0),
+  nMatches: z.number().int().min(0),
+  nMistakes: z.number().int().min(0),
+  delta_avg_s: z.number().min(0),
+  delta_stdDev_s: z.number().min(0),
+  delta_avg_ratio: z.number().min(0).max(1),
+  delta_stdDev_ratio: z.number().min(0).max(1),
+  date: z.coerce.date(),
+  score: z.number().min(0).max(1)
+})
+
+export type SessionStats_t = z.infer<typeof SessionStatsSchema>
 
 export function getSessionStats({ targets, matches, extraPresses, missedNotes }: SessionEval_t): SessionStats_t {
   const nTargets = targets.length
@@ -119,6 +119,7 @@ export function getSessionStats({ targets, matches, extraPresses, missedNotes }:
     delta_stdDev_s: Stats.stdDev(matches.map(m => m.delta_s)),
     delta_avg_ratio: Stats.mean(matches.map(m => m.delta_ratio)),
     delta_stdDev_ratio: Stats.stdDev(matches.map(m => m.delta_ratio)),
+    date: new Date(),
     score
   }
 }
@@ -132,6 +133,7 @@ export function emptySessionStats(): SessionStats_t {
     delta_stdDev_s: 0,
     delta_avg_ratio: 0,
     delta_stdDev_ratio: 0,
+    date: new Date(),
     score: 1
   }
 }

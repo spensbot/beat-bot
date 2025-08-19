@@ -34,9 +34,6 @@ export default class AudioEngine {
   }
 
   async playMetronomeSound(gain: number, perfTime: PerfTime) {
-    console.log(`playMetronomeSound`, perfTime.toString())
-    // this.metronomeSource?.stop(0) // Stop any previous metronome sound
-
     await this.init()
 
     if (!this.graph) return

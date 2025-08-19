@@ -2,11 +2,12 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 import { PerfTime, Tempo } from '@/utils/timeUtils'
-import { initialState, TimeSettings } from '@/engine/AppState'
+import { AppState, initialState, TimeSettings } from '@/engine/AppState'
 import { Press_t } from '@/engine/input/InputEngine'
-import { initSession } from '@/engine/loop/Session'
+import { initSession, Session_t } from '@/engine/loop/Session'
 import { Loop_t } from '@/engine/loop/Loop'
 import { clamp } from '@/utils/math'
+import { evaluateSession, getSessionStats, SessionStats_t } from '@/engine/loop/SessionEval'
 
 export const VISUALIZER_LENGTH_MIN = 2
 export const VISUALIZER_LENGTH_MAX = 30
@@ -28,15 +29,11 @@ export const appSlice = createSlice({
       state.metronome.gain = action.payload
     },
     startSession: (state, action: PayloadAction<PerfTime>) => {
-      if (state.activeSession) {
-        state.pastSessions.push(state.activeSession)
-      }
+      pushExistingSessionStatsIntoHistory(state as AppState)
       state.activeSession = initSession(action.payload, state.loop, state.time as TimeSettings)
     },
     endSession: (state) => {
-      if (state.activeSession) {
-        state.pastSessions.push(state.activeSession)
-      }
+      pushExistingSessionStatsIntoHistory(state as AppState)
       state.activeSession = undefined
     },
     addPress: (state, action: PayloadAction<Press_t>) => {
@@ -51,18 +48,25 @@ export const appSlice = createSlice({
       state.visualizer.length_s = clamp(action.payload, VISUALIZER_LENGTH_MIN, VISUALIZER_LENGTH_MAX)
     },
     setLoop: (state, action: PayloadAction<Loop_t>) => {
+      pushExistingSessionStatsIntoHistory(state as AppState)
       state.loop = action.payload
-      // Reset the active session if the loop changes
-      if (state.activeSession) {
-        state.pastSessions.push(state.activeSession)
-        state.activeSession = undefined
-      }
     },
     setInputLatency: (state, action: PayloadAction<number>) => {
       state.hardware.inputLatency_ms = action.payload
     }
   },
 })
+
+function pushExistingSessionStatsIntoHistory(state: AppState) {
+  if (state.activeSession) {
+    const sessionEval = evaluateSession(state.activeSession, state.loop.data, state.time.tempo)
+    const sessionStats = getSessionStats(sessionEval)
+    if (!state.sessionStatsByLoopId[state.loop.id]) {
+      state.sessionStatsByLoopId[state.loop.id] = []
+    }
+    state.sessionStatsByLoopId[state.loop.id].push(sessionStats)
+  }
+}
 
 // Action creators are generated for each case reducer function
 export const {

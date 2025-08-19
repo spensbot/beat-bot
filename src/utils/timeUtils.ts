@@ -1,5 +1,6 @@
 import { clamp, clampOptional, lerp } from "./math"
 import RollingAverage from "./RollingAverage"
+import * as z from "zod"
 
 /** WARNING: This is a hack. timeDelta_perfToAudio won't work for multiple contexts */
 let avgTimeDelta: RollingAverage | null = null
@@ -52,9 +53,10 @@ export class Duration {
   }
 }
 
-export interface Tempo {
-  bpm: number
-}
+export const TempoSchema = z.object({
+  bpm: z.number().min(0, "Tempo must be at least 0 BPM")
+});
+export type Tempo = z.infer<typeof TempoSchema>
 
 export function getPeriod_s(tempo: Tempo) {
   return 60 / tempo.bpm
