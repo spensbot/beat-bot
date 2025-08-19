@@ -1,8 +1,8 @@
 import { Tempo } from '../utils/timeUtils'
 import { Loop_t } from './loop/Loop'
 import { Session_t } from './loop/Session'
-import { VisualizerSettings } from './visualizer/VisualizerSettings'
 import { defaultLoops } from './loop/defaultLoops'
+import * as z from 'zod'
 
 export interface AppState {
   time: TimeSettings // General app settings
@@ -20,13 +20,22 @@ export interface TimeSettings {
   loopRepeats: number
 }
 
-export interface MetronomeSettings {
-  gain: number // Volume of the metronome
-}
+export const VisualizerSettingsSchema = z.object({
+  length_s: z.number().min(0), // how many seconds can be seen on the visualizer at once
+  playheadRatio: z.number().min(0).max(1) // how far the playhead is from the start of visualizerLength
+})
 
-export interface HardwareSettings {
-  inputLatency_ms: number
-}
+export const MetronomeSettingsSchema = z.object({
+  gain: z.number().min(0).max(1) // Volume of the metronome
+})
+
+export const HardwareSettingsSchema = z.object({
+  inputLatency_ms: z.number().min(0) // Latency of the hardware input
+})
+
+export type VisualizerSettings = z.infer<typeof VisualizerSettingsSchema>
+export type MetronomeSettings = z.infer<typeof MetronomeSettingsSchema>
+export type HardwareSettings = z.infer<typeof HardwareSettingsSchema>
 
 export const initialState: AppState = {
   time: {
