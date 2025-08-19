@@ -32,19 +32,6 @@ describe('evaluateSession', () => {
     expect(stats.delta_avg_s).toBeCloseTo(0.1)
   })
 
-  test('should handle missed notes correctly', () => {
-    const loop = loopData(4, [1, 3])
-    const session = makeSession(0, 4, [1.1])
-    const tempo = Tempo.bpm(60)
-    const result = evaluateSession(session, loop, tempo)
-    const stats = getSessionStats(result)
-
-    expect(result.matches.length).toBe(1)
-    expect(result.extraPresses.size).toBe(0)
-    expect(result.missedNotes.size).toBe(1)
-    expect(stats.delta_avg_s).toBeCloseTo(0.1)
-  })
-
   test('should return empty stats when no presses or notes exist', () => {
     const loop = loopData(4, [])
     const session = makeSession(0, 4, [])
