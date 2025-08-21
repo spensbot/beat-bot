@@ -11,6 +11,7 @@ const OVERFLOW_S = 0.5
 export interface Match_t {
   press: Press_t
   note: ExpandedNote_t
+  velocity: number // Optional velocity for the match
   delta_s: number
   delta_ratio: number
 }
@@ -20,6 +21,7 @@ export interface SessionEval_t {
   matches: Match_t[]
   extraPresses: Set<Press_t>
   missedNotes: Set<ExpandedNote_t>
+  tempo: Tempo
 }
 
 export function emptySessionEval(): SessionEval_t {
@@ -28,6 +30,7 @@ export function emptySessionEval(): SessionEval_t {
     matches: [],
     extraPresses: new Set(),
     missedNotes: new Set(),
+    tempo: { bpm: 120 } // Default tempo
   }
 }
 
@@ -73,6 +76,7 @@ export function evaluateSession(
       matches.push({
         press: closestPress,
         note,
+        velocity: closestPress.velocity,
         delta_s,
         delta_ratio
       })
@@ -86,5 +90,6 @@ export function evaluateSession(
     matches,
     extraPresses: presses,
     missedNotes: unrolled,
+    tempo
   }
 }

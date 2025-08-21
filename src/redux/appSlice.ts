@@ -59,14 +59,16 @@ export const appSlice = createSlice({
 })
 
 function pushExistingSessionStatsIntoHistory(state: AppState) {
-  if (state.activeSession) {
-    const sessionEval = evaluateSession(state.activeSession, state.loop.data, state.time.tempo)
-    const sessionStats = getSessionStats(sessionEval)
-    if (!state.sessionStatsByLoopId[state.loop.id]) {
-      state.sessionStatsByLoopId[state.loop.id] = []
-    }
-    state.sessionStatsByLoopId[state.loop.id].push(sessionStats)
+  if (state.activeSession === undefined) return
+
+  const sessionEval = evaluateSession(state.activeSession, state.loop.data, state.time.tempo)
+  if (sessionEval.matches.length < 1) return
+
+  const sessionStats = getSessionStats(sessionEval)
+  if (!state.sessionStatsByLoopId[state.loop.id]) {
+    state.sessionStatsByLoopId[state.loop.id] = []
   }
+  state.sessionStatsByLoopId[state.loop.id].push(sessionStats)
 }
 
 // Action creators are generated for each case reducer function

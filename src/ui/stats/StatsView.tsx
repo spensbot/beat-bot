@@ -2,6 +2,7 @@ import { useAppState } from "@/redux/hooks"
 import cn from "@/utils/cn"
 import { selectSessionEval } from "./selectSessionEval"
 import { getSessionStats } from "@/engine/loop/SessionStats"
+import { HistoricalStatsView } from "./HistoricalStatsView"
 
 export default function StatsView() {
   const eval_ = useAppState(selectSessionEval)
@@ -20,6 +21,9 @@ export default function StatsView() {
     : "-"
   const score = stats ? `${(stats.score * 100).toFixed(0)}%` : "-"
   const nTargets = stats?.nTargets.toString() ?? "-"
+  const velocityStdDev = stats
+    ? `${(stats.velocity_stdDev * 100).toFixed(0)}%`
+    : "-"
 
   return (
     <div className="flex flex-col gap-1 w-50">
@@ -29,6 +33,8 @@ export default function StatsView() {
       <Stat name="Deviation" value={deviation} value2={deviationPct} />
       <Stat name={deltaText} value={deltaAvg} />
       <Stat name="Score" value={`${score}`} />
+      <Stat name="Velocity Std Dev" value={velocityStdDev} />
+      <HistoricalStatsView />
     </div>
   )
 }

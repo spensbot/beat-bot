@@ -7,6 +7,7 @@ import { setLoop } from "@/redux/appSlice"
 import useHover from "@/utils/hooks/useHover"
 import { useAppState } from "@/redux/hooks"
 import { cn } from "@/lib/utils"
+import { LoopStatsView } from "@/ui/stats/LoopStatsView"
 
 export function LoopSelectView({ className }: { className: string }) {
   return (
@@ -48,10 +49,13 @@ function LoopView({ loop }: { loop: Loop_t }) {
       {/* <BeatsPerBar val={loop.beatsPerBar} /> */}
       <LoopPreview data={loop.data} />
       {isPoppin && (
-        <div>
-          <Bars val={loop.data.beatLength / loop.beatsPerBar} />
-          <BeatsPerBar val={loop.beatsPerBar} />
-        </div>
+        <>
+          <div>
+            <Bars val={loop.data.beatLength / loop.beatsPerBar} />
+            <BeatsPerBar val={loop.beatsPerBar} />
+          </div>
+          <LoopStatsView loopId={loop.id} />
+        </>
       )}
     </div>
   )

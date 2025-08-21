@@ -12,6 +12,9 @@ const saveManager = new SaveManager({
 
 const loadedStateResult = saveManager.load('PersistedAppState')
 const loadedState = loadedStateResult.isOk() ? loadedStateResult.value : null
+if (loadedStateResult.isErr()) {
+  console.error('Failed to load persisted state:', loadedStateResult.error.message)
+}
 
 export const store = configureStore({
   reducer: {

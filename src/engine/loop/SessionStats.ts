@@ -6,15 +6,18 @@ import { clamp } from "@/utils/math";
 import { Match_t, SessionEval_t } from "./SessionEval";
 
 export const SessionStatsSchema = z.object({
-  nTargets: z.number().int().min(0),
-  nMatches: z.number().int().min(0),
-  nMistakes: z.number().int().min(0),
-  delta_avg_s: z.number().min(0),
-  delta_stdDev_s: z.number().min(0),
-  delta_avg_ratio: z.number().min(0).max(1),
-  delta_stdDev_ratio: z.number().min(0).max(1),
+  nTargets: z.number().int(),
+  nMatches: z.number().int(),
+  nMistakes: z.number().int(),
+  delta_avg_s: z.number(),
+  delta_stdDev_s: z.number(),
+  delta_avg_ratio: z.number(),
+  delta_stdDev_ratio: z.number(),
+  velocity_avg: z.number(),
+  velocity_stdDev: z.number(),
   date: z.coerce.date(),
-  score: z.number().min(0).max(1)
+  score: z.number(),
+  bpm: z.number()
 })
 
 export type SessionStats_t = z.infer<typeof SessionStatsSchema>
@@ -33,8 +36,11 @@ export function getSessionStats(eval_: SessionEval_t): SessionStats_t {
     delta_stdDev_s: Stats.stdDev(matches.map(m => m.delta_s)),
     delta_avg_ratio: Stats.mean(matches.map(m => m.delta_ratio)),
     delta_stdDev_ratio: Stats.stdDev(matches.map(m => m.delta_ratio)),
+    velocity_avg: Stats.mean(matches.map(m => m.velocity)),
+    velocity_stdDev: Stats.stdDev(matches.map(m => m.velocity)),
     date: new Date(),
-    score
+    score,
+    bpm: eval_.tempo.bpm // Include the BPM in the session stats
   }
 }
 
@@ -52,18 +58,4 @@ function calculateScore({ targets, matches, extraPresses }: SessionEval_t): numb
 /** Returns a value from 0 to 1 representing how well the press matched the note */
 function getMatchScore(match: Match_t): number {
   return 1 - Math.abs(match.delta_ratio)
-}
-
-export function emptySessionStats(): SessionStats_t {
-  return {
-    nTargets: 0,
-    nMatches: 0,
-    nMistakes: 0,
-    delta_avg_s: 0,
-    delta_stdDev_s: 0,
-    delta_avg_ratio: 0,
-    delta_stdDev_ratio: 0,
-    date: new Date(),
-    score: 1
-  }
 }
