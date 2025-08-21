@@ -63,8 +63,8 @@ export default function Visualizer() {
       <canvas
         ref={canvasRef}
         className="w-full h-full"
-        width={dims?.width}
-        height={dims?.height}
+        width={dims?.widthDevice}
+        height={dims?.heightDevice}
       />
     </div>
   )

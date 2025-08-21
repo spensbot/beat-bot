@@ -1,6 +1,7 @@
 import { PerfTime, Tempo } from '@/utils/timeUtils'
 import { describe, expect, test } from 'vitest'
-import { evaluateSession, getSessionStats } from './SessionEval'
+import { evaluateSession } from './SessionEval'
+import { getSessionStats } from './SessionStats'
 import { Press_t } from '../input/InputEngine'
 import { Session_t } from './Session'
 import { loopData } from './LoopData'

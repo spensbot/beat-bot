@@ -7,7 +7,8 @@ import { Press_t } from '@/engine/input/InputEngine'
 import { initSession, Session_t } from '@/engine/loop/Session'
 import { Loop_t } from '@/engine/loop/Loop'
 import { clamp } from '@/utils/math'
-import { evaluateSession, getSessionStats, SessionStats_t } from '@/engine/loop/SessionEval'
+import { evaluateSession } from '@/engine/loop/SessionEval'
+import { getSessionStats, SessionStats_t } from '@/engine/loop/SessionStats'
 
 export const VISUALIZER_LENGTH_MIN = 2
 export const VISUALIZER_LENGTH_MAX = 30

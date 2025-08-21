@@ -1,7 +1,6 @@
 import { Stats } from "@/utils/Stats";
-import { Loop_t } from "./Loop";
+import { Loop_t, LoopId_t } from "./Loop";
 import { concat, repeat } from "./LoopData";
-import { insertBetween } from "@/utils/listUtils";
 
 const singles = basicRepeat('Singles', 1, 0.0)
 const doubles = basicRepeat('Doubles', 2, 0.1)
@@ -22,7 +21,7 @@ export const defaultLoops: Loop_t[] = [
 
 function basicRepeat(name: string, divisor: number, difficulty: number): Loop_t {
   return {
-    id: name,
+    id: name as LoopId_t,
     name,
     difficulty,
     beatsPerBar: 4,
@@ -37,7 +36,7 @@ function alternate(loops: Loop_t[]): Loop_t {
 
 function concatLoops(name: string, loops: Loop_t[]): Loop_t {
   return {
-    id: name,
+    id: name as LoopId_t,
     name,
     difficulty: Stats.max(loops.map(l => l.difficulty)) + 0.1,
     beatsPerBar: loops[0].beatsPerBar,

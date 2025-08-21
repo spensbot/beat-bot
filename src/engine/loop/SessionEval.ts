@@ -2,11 +2,8 @@ import { Duration, PerfTime, Tempo } from "@/utils/timeUtils";
 import { ExpandedNote_t, expandLoop } from "./expandLoop";
 import { Session_t } from "./Session";
 import { Press_t } from "../input/InputEngine";
-import { Stats } from "@/utils/Stats";
 import { LoopData_t } from "./LoopData";
-import { last, sum } from "@/utils/listUtils";
-import { clamp } from "@/utils/math";
-import z from "zod";
+import { last } from "@/utils/listUtils";
 
 /** The number of seconds that a press can register as a match outside the bounds of the session */
 const OVERFLOW_S = 0.5
@@ -89,51 +86,5 @@ export function evaluateSession(
     matches,
     extraPresses: presses,
     missedNotes: unrolled,
-  }
-}
-
-export const SessionStatsSchema = z.object({
-  nTargets: z.number().int().min(0),
-  nMatches: z.number().int().min(0),
-  nMistakes: z.number().int().min(0),
-  delta_avg_s: z.number().min(0),
-  delta_stdDev_s: z.number().min(0),
-  delta_avg_ratio: z.number().min(0).max(1),
-  delta_stdDev_ratio: z.number().min(0).max(1),
-  date: z.coerce.date(),
-  score: z.number().min(0).max(1)
-})
-
-export type SessionStats_t = z.infer<typeof SessionStatsSchema>
-
-export function getSessionStats({ targets, matches, extraPresses, missedNotes }: SessionEval_t): SessionStats_t {
-  const nTargets = targets.length
-  const nMistakes = extraPresses.size + missedNotes.size
-  const score = clamp((sum(matches, m => 1 - Math.abs(m.delta_ratio)) - nMistakes) / targets.length, 0, 1)
-
-  return {
-    nTargets,
-    nMatches: matches.length,
-    nMistakes,
-    delta_avg_s: Stats.mean(matches.map(m => m.delta_s)),
-    delta_stdDev_s: Stats.stdDev(matches.map(m => m.delta_s)),
-    delta_avg_ratio: Stats.mean(matches.map(m => m.delta_ratio)),
-    delta_stdDev_ratio: Stats.stdDev(matches.map(m => m.delta_ratio)),
-    date: new Date(),
-    score
-  }
-}
-
-export function emptySessionStats(): SessionStats_t {
-  return {
-    nTargets: 0,
-    nMatches: 0,
-    nMistakes: 0,
-    delta_avg_s: 0,
-    delta_stdDev_s: 0,
-    delta_avg_ratio: 0,
-    delta_stdDev_ratio: 0,
-    date: new Date(),
-    score: 1
   }
 }

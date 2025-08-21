@@ -1,7 +1,7 @@
 import { TempoSchema } from '../utils/timeUtils'
 import { LoopSchema } from './loop/Loop'
 import { Session_t } from './loop/Session'
-import { SessionStatsSchema } from './loop/SessionEval'
+import { SessionStatsSchema } from './loop/SessionStats'
 import { defaultLoops } from './loop/defaultLoops'
 import * as z from 'zod'
 

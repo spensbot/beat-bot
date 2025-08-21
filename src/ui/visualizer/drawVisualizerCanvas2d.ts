@@ -41,8 +41,8 @@ function drawCursor({ vis, canvas }: Ctx) {
 
   drawTriangles({
     color: '#fff',
-    height: 8,
-    width: 13,
+    height: 8 * window.devicePixelRatio,
+    width: 13 * window.devicePixelRatio,
     ctx: canvas,
     x
   })
@@ -58,8 +58,8 @@ function drawBeatMarkers({ appState, vis, canvas }: Ctx) {
     const xRatio = getVisualizerRatio(marker.time_s, vis)
     drawTriangles({
       color: '#888',
-      height: 8,
-      width: 10,
+      height: 8 * window.devicePixelRatio,
+      width: 10 * window.devicePixelRatio,
       ctx: canvas,
       x: xRatio
     })
@@ -103,7 +103,7 @@ function drawCount({ canvas, vis, appState }: Ctx) {
       x,
       y,
       color: '#fff',
-      size: 18
+      size: 16 * window.devicePixelRatio
     })
   })
 }
