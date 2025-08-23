@@ -3,6 +3,8 @@ import { useAppState } from "@/redux/hooks"
 import { sum } from "@/utils/listUtils"
 import { Stats } from "@/utils/Stats"
 
+const PASSING_SCORE = 0.9
+
 export function LoopStatsView({ loopId }: { loopId: string }) {
   const stats: SessionStats_t[] | undefined = useAppState(
     (s) => s.sessionStatsByLoopId[loopId]
@@ -11,17 +13,22 @@ export function LoopStatsView({ loopId }: { loopId: string }) {
   if (!stats) return null
 
   const renderStats: StatProps[] = [
-    { label: "Total Matches", value: sum(stats, (s) => s.nMatches) },
-    { label: "Average Score", value: Stats.mean(stats.map((s) => s.score)) },
-    { label: "Max BPM", value: Stats.max(stats.map((s) => s.bpm)) },
+    // { label: "Total Matches", value: sum(stats, (s) => s.nMatches) },
+    // { label: "Average Score", value: Stats.mean(stats.map((s) => s.score)) },
     {
-      label: "Average Variance",
-      value: `${Stats.mean(stats.map((s) => s.delta_stdDev_ratio))}%`,
+      label: "Highest Passing BPM (>90%)",
+      value: Stats.max(
+        stats.filter((s) => s.score > PASSING_SCORE).map((s) => s.bpm)
+      ),
     },
-    {
-      label: "Velocity Std Dev",
-      value: Stats.stdDev(stats.map((s) => s.velocity_avg)),
-    },
+    // {
+    //   label: "Average Variance",
+    //   value: `${Stats.mean(stats.map((s) => s.delta_stdDev_ratio))}%`,
+    // },
+    // {
+    //   label: "Velocity Std Dev",
+    //   value: Stats.stdDev(stats.map((s) => s.velocity_avg)),
+    // },
   ]
 
   return (
@@ -41,7 +48,7 @@ interface StatProps {
 function Stat({ label, value }: StatProps) {
   return (
     <div className="stat">
-      <span className="label">{label}:</span>
+      <span className="label">{label}: </span>
       <span className="value">{value}</span>
     </div>
   )

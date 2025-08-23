@@ -30,12 +30,11 @@ export const appSlice = createSlice({
       state.metronome.gain = action.payload
     },
     startSession: (state, action: PayloadAction<PerfTime>) => {
-      pushExistingSessionStatsIntoHistory(state as AppState)
+      resetSession(state as AppState)
       state.activeSession = initSession(action.payload, state.loop, state.time as TimeSettings)
     },
     endSession: (state) => {
-      pushExistingSessionStatsIntoHistory(state as AppState)
-      state.activeSession = undefined
+      resetSession(state as AppState)
     },
     addPress: (state, action: PayloadAction<Press_t>) => {
       state.activeSession?.presses.push(action.payload)
@@ -49,7 +48,7 @@ export const appSlice = createSlice({
       state.visualizer.length_s = clamp(action.payload, VISUALIZER_LENGTH_MIN, VISUALIZER_LENGTH_MAX)
     },
     setLoop: (state, action: PayloadAction<Loop_t>) => {
-      pushExistingSessionStatsIntoHistory(state as AppState)
+      resetSession(state as AppState)
       state.loop = action.payload
     },
     setInputLatency: (state, action: PayloadAction<number>) => {
@@ -58,10 +57,11 @@ export const appSlice = createSlice({
   },
 })
 
-function pushExistingSessionStatsIntoHistory(state: AppState) {
+function resetSession(state: AppState) {
   if (state.activeSession === undefined) return
 
   const sessionEval = evaluateSession(state.activeSession, state.loop.data, state.time.tempo)
+  state.activeSession = undefined
   if (sessionEval.matches.length < 1) return
 
   const sessionStats = getSessionStats(sessionEval)

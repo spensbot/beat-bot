@@ -175,8 +175,9 @@ export function timeDelta_perfToAudio(ctx: AudioContext): Duration {
   if (avgTimeDelta) {
     avgTimeDelta.push(delta.s())
   } else {
-    avgTimeDelta = new RollingAverage(delta.s(), 0.01)
+    avgTimeDelta = new RollingAverage(delta.s(), 0.05, 0.100 /* 50ms max delta */)
   }
+
   return Duration.s(avgTimeDelta.get()).plus(audioLatency(ctx))
 }
 
