@@ -8,6 +8,7 @@ import useHover from "@/utils/hooks/useHover"
 import { useAppState } from "@/redux/hooks"
 import { cn } from "@/lib/utils"
 import { LoopStatsView } from "@/ui/stats/LoopStatsView"
+import { BpmGraph } from "@/ui/stats/graphs/BpmGraph"
 
 export function LoopSelectView({ className }: { className: string }) {
   return (
@@ -54,7 +55,8 @@ function LoopView({ loop }: { loop: Loop_t }) {
             <Bars val={loop.data.beatLength / loop.beatsPerBar} />
             <BeatsPerBar val={loop.beatsPerBar} />
           </div>
-          <LoopStatsView loopId={loop.id} />
+          {/* <LoopStatsView loopId={loop.id} /> */}
+          <BpmGraph loopId={loop.id} />
         </>
       )}
     </div>

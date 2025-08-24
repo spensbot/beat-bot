@@ -1,9 +1,7 @@
-import { SessionStats_t } from "@/engine/loop/SessionStats"
+import { PASSING_SCORE, SessionStats_t } from "@/engine/loop/SessionStats"
 import { useAppState } from "@/redux/hooks"
 import { sum } from "@/utils/listUtils"
 import { Stats } from "@/utils/Stats"
-
-const PASSING_SCORE = 0.9
 
 export function LoopStatsView({ loopId }: { loopId: string }) {
   const stats: SessionStats_t[] | undefined = useAppState(

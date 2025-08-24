@@ -5,6 +5,8 @@ import { sum } from "@/utils/listUtils";
 import { clamp } from "@/utils/math";
 import { Match_t, SessionEval_t } from "./SessionEval";
 
+export const PASSING_SCORE = 0.9
+
 export const SessionStatsSchema = z.object({
   nTargets: z.number().int(),
   nMatches: z.number().int(),
