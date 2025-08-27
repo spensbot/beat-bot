@@ -1,4 +1,4 @@
-import { beatsToDuration, PerfTime } from "@/utils/timeUtils";
+import { beatsToDuration, Duration, PerfTime } from "@/utils/timeUtils";
 import { Press_t } from "../input/InputEngine";
 import { Loop_t } from "./Loop";
 import { TimeSettings } from "../AppState";
@@ -19,8 +19,8 @@ export function sessionStartTimeFromNow(now: PerfTime, time: TimeSettings): Perf
 
 export function initSession(now: PerfTime, loop: Loop_t, time: TimeSettings): Session_t {
   const start = sessionStartTimeFromNow(now, time)
-  const loopDuration = beatsToDuration(time.tempo, loop.data.beatLength * time.loopRepeats);
-  const end = start.plus(loopDuration)
+  const sessionDuration = getSessionDuration(loop, time)
+  const end = start.plus(sessionDuration)
   // const end = start.plus(loopDuration.plus(afterBuffer))
 
   return {
@@ -28,4 +28,8 @@ export function initSession(now: PerfTime, loop: Loop_t, time: TimeSettings): Se
     end,
     presses: []
   };
+}
+
+export function getSessionDuration(loop: Loop_t, time: TimeSettings): Duration {
+  return beatsToDuration(time.tempo, loop.beatsPerBar * time.sessionBars / loop.data.beatLength)
 }

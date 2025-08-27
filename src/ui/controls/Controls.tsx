@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import {
   endSession,
   setCountInBeats,
-  setLoopRepeats,
+  setSessionBars,
   setTempo,
   setVisualizerLength,
   startSession,
@@ -109,19 +109,19 @@ function CountInSlider() {
 
 function LoopRepeatsSlider() {
   const dispatch = useDispatch()
-  const loopRepeats = useAppState((s) => s.time.loopRepeats)
+  const sessionBars = useAppState((s) => s.time.sessionBars)
   const disabled = useAppState((s) => s.activeSession !== undefined)
 
   return (
     <LabeledSlider
-      value={loopRepeats}
+      value={sessionBars}
       min={1}
       max={16}
       step={1}
       onChange={(value) => {
-        dispatch(setLoopRepeats(value))
+        dispatch(setSessionBars(value))
       }}
-      label="Loop Repeats"
+      label="Bars"
       valueString={(value) => `${Math.round(value)}`}
       disabled={disabled}
     />

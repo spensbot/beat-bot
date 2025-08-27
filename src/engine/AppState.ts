@@ -8,7 +8,7 @@ import * as z from 'zod'
 export const TimeSettingsSchema = z.object({
   tempo: TempoSchema,
   countInBeats: z.number().min(0, "Count in beats must be at least 0"),
-  loopRepeats: z.number().min(1, "Loop repeats must be at least 1")
+  sessionBars: z.number().min(1, "bars must be at least 1")
 })
 
 export const VisualizerSettingsSchema = z.object({
@@ -46,7 +46,7 @@ export const initialState: AppState = {
   time: {
     tempo: { bpm: 120 }, // Default tempo
     countInBeats: 4, // How many beats to count in before starting the loop
-    loopRepeats: 4, // How many times the loop should repeat
+    sessionBars: 4, // How many times the loop should repeat
   },
   metronome: {
     gain: 0.5, // Volume of the metronome

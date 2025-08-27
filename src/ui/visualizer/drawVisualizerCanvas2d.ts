@@ -4,6 +4,7 @@ import { getBeatMarkers, getVisualizerCtx, getVisualizerRatio, VisualizerCtx } f
 import { clear, drawLine, drawRect, drawText, drawTriangles } from "../canvas2dUtils"
 import { expandLoop } from "@/engine/loop/expandLoop"
 import { SessionEval_t } from "@/engine/loop/SessionEval"
+import { getSessionDuration } from "@/engine/loop/Session"
 
 interface Ctx {
   canvas: CanvasRenderingContext2D,
@@ -76,12 +77,12 @@ function drawPresses({ canvas, vis, appState }: Ctx) {
 }
 
 function drawLoop({ canvas, vis, appState }: Ctx) {
-  const { loop, time: { tempo, loopRepeats } } = appState
+  const { loop, time } = appState
 
-  const playDuration = Duration.s(loop.data.beatLength * getPeriod_s(tempo) * loopRepeats)
+  const sessionDuration = getSessionDuration(loop, time)
   const sessionStart = PerfTime.s(vis.sessionStart_s)
-  const end = sessionStart.plus(playDuration)
-  const expandedLoop = expandLoop(loop.data, sessionStart, end, tempo)
+  const end = sessionStart.plus(sessionDuration)
+  const expandedLoop = expandLoop(loop.data, sessionStart, end, time.tempo)
 
   expandedLoop.forEach(note => {
     const ratio = getVisualizerRatio(note.time.duration.s(), vis)

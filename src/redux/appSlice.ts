@@ -23,8 +23,8 @@ export const appSlice = createSlice({
     setCountInBeats: (state, action: PayloadAction<number>) => {
       state.time.countInBeats = action.payload
     },
-    setLoopRepeats: (state, action: PayloadAction<number>) => {
-      state.time.loopRepeats = action.payload
+    setSessionBars: (state, action: PayloadAction<number>) => {
+      state.time.sessionBars = action.payload
     },
     setMetronomeGain: (state, action: PayloadAction<number>) => {
       state.metronome.gain = action.payload
@@ -75,7 +75,7 @@ function resetSession(state: AppState) {
 export const {
   setTempo,
   setCountInBeats,
-  setLoopRepeats,
+  setSessionBars,
   setMetronomeGain,
   startSession,
   endSession,
