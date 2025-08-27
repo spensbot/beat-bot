@@ -31,5 +31,6 @@ export function initSession(now: PerfTime, loop: Loop_t, time: TimeSettings): Se
 }
 
 export function getSessionDuration(loop: Loop_t, time: TimeSettings): Duration {
-  return beatsToDuration(time.tempo, loop.beatsPerBar * time.sessionBars / loop.data.beatLength)
+  const sessionBeats = time.sessionBars * loop.beatsPerBar
+  return beatsToDuration(time.tempo, sessionBeats)
 }

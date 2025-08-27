@@ -2,8 +2,9 @@ import { Duration, PerfTime, Tempo } from "@/utils/timeUtils";
 import { ExpandedNote_t, expandLoop } from "./expandLoop";
 import { Session_t } from "./Session";
 import { Press_t } from "../input/InputEngine";
-import { LoopData_t } from "./LoopData";
+import { LoopData_t, LoopNote_t } from "./LoopData";
 import { last } from "@/utils/listUtils";
+import { Stats } from "@/utils/Stats";
 
 /** The number of seconds that a press can register as a match outside the bounds of the session */
 const OVERFLOW_S = 0.5
@@ -16,11 +17,18 @@ export interface Match_t {
   delta_ratio: number
 }
 
+export interface NoteStats_t {
+  avg_delta_s: number
+  stdDev_delta_s: number
+  avg_velocity: number
+}
+
 export interface SessionEval_t {
   targets: ExpandedNote_t[]
   matches: Match_t[]
   extraPresses: Set<Press_t>
   missedNotes: Set<ExpandedNote_t>
+  noteStats: Map<LoopNote_t, NoteStats_t>
   tempo: Tempo
 }
 
@@ -30,6 +38,7 @@ export function emptySessionEval(): SessionEval_t {
     matches: [],
     extraPresses: new Set(),
     missedNotes: new Set(),
+    noteStats: new Map(),
     tempo: { bpm: 120 } // Default tempo
   }
 }
@@ -85,11 +94,23 @@ export function evaluateSession(
     }
   })
 
+  const noteStats = new Map<LoopNote_t, NoteStats_t>()
+  for (const note of loopData.notes) {
+    const noteMatches = matches.filter(m => m.note.loopNote === note)
+
+    noteStats.set(note, {
+      avg_velocity: Stats.mean(noteMatches.map(m => m.velocity)),
+      avg_delta_s: Stats.mean(noteMatches.map(m => m.delta_s)),
+      stdDev_delta_s: Stats.stdDev(noteMatches.map(m => m.delta_s))
+    })
+  }
+
   return {
     targets,
     matches,
     extraPresses: presses,
     missedNotes: unrolled,
+    noteStats,
     tempo
   }
 }

@@ -5,6 +5,7 @@ import { LabeledSlider } from "../components/LabeledSlider"
 import { useDispatch } from "react-redux"
 import { useAppState } from "@/redux/hooks"
 import { setInputLatency } from "@/redux/appSlice"
+import { CountInSlider } from "./Controls"
 
 export default function AdvancedControls() {
   const [advanced, setAdvanced] = useState(false)
@@ -16,6 +17,7 @@ export default function AdvancedControls() {
       <Button onClick={() => setAdvanced(!advanced)}>{buttonText}</Button>
       {advanced && (
         <>
+          <CountInSlider />
           {/* <InputLatencySlider /> */}
           <Debugger />
         </>

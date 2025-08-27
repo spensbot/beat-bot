@@ -10,7 +10,7 @@ export default function LoopPreview({ data }: { data: LoopData_t }) {
   useEffect(() => {
     const drawCb = () => {
       if (ref.current) {
-        drawLoopPreview(ref.current, data)
+        drawLoopPreview(ref.current, data, 0)
       }
     }
 

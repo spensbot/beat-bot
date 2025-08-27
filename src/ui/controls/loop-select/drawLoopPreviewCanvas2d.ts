@@ -1,12 +1,17 @@
 import { LoopData_t } from "@/engine/loop/LoopData";
-import { clear, drawLine } from "@/ui/canvas2dUtils";
+import { SessionEval_t } from "@/engine/loop/SessionEval";
+import { clear, drawLine, drawRect } from "@/ui/canvas2dUtils";
+import { getPeriod_s } from "@/utils/timeUtils";
 
 interface Ctx {
   canvas: CanvasRenderingContext2D,
-  data: LoopData_t
+  data: LoopData_t,
+  buffer_beats: number,
+  sessionEval?: SessionEval_t,
+  bgColor?: string,
 }
 
-export function drawLoopPreview(elem: HTMLCanvasElement, data: LoopData_t) {
+export function drawLoopPreview(elem: HTMLCanvasElement, data: LoopData_t, buffer_beats: number, sessionEval?: SessionEval_t, bgColor?: string) {
   const canvas = elem.getContext("2d")
   if (canvas === null) {
     console.error(`Failed to get context`)
@@ -15,19 +20,62 @@ export function drawLoopPreview(elem: HTMLCanvasElement, data: LoopData_t) {
 
   const ctx: Ctx = {
     canvas,
-    data
+    data,
+    sessionEval,
+    buffer_beats,
+    bgColor
   }
 
   clear(canvas)
 
+  drawBg(ctx)
+  drawHits(ctx)
   drawNotes(ctx)
 }
 
+function drawBg(ctx: Ctx) {
+  if (!ctx.bgColor) return
+
+  drawRect({
+    ctx: ctx.canvas,
+    x: getX(0, ctx),
+    width: ctx.data.beatLength / beatLength(ctx) * ctx.canvas.canvas.width,
+    color: ctx.bgColor
+  })
+}
+
 function drawNotes(ctx: Ctx) {
-  const length = ctx.data.beatLength
+  ctx.data.notes.forEach(note => {
+    drawLine(ctx.canvas, getX(note.beatTime, ctx), 2, '#fff', 0.5)
+  })
+}
+
+function drawHits(ctx: Ctx) {
+  const eval_ = ctx.sessionEval
+  if (!eval_) return
 
   ctx.data.notes.forEach(note => {
-    const ratio = note.beatTime / length
-    drawLine(ctx.canvas, ratio, 1, '#fff', 1)
+    const stats = eval_.noteStats.get(note)
+    if (!stats) return
+    const s_per_beat = getPeriod_s(eval_.tempo)
+    const delta_beats = stats.avg_delta_s / s_per_beat
+    drawLine(ctx.canvas, getX(note.beatTime + delta_beats, ctx), 1, '#f55', 1)
+
+    const std_dev_beats = stats.stdDev_delta_s / s_per_beat
+
+    drawRect({
+      ctx: ctx.canvas,
+      x: getX(note.beatTime + delta_beats - std_dev_beats, ctx),
+      width: std_dev_beats * 2 / beatLength(ctx) * ctx.canvas.canvas.width,
+      color: '#f558'
+    })
   })
+}
+
+const beatLength = (ctx: Ctx) => ctx.data.beatLength + ctx.buffer_beats * 2
+
+function getX(beatTime: number, ctx: Ctx) {
+  const buff = ctx.buffer_beats
+  const ratio = (beatTime + buff) / beatLength(ctx)
+  return ratio
 }

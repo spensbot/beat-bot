@@ -60,7 +60,7 @@ export function concat(loops: LoopData_t[]): LoopData_t {
       beatTime: offset + hit.beatTime
     }))
     return {
-      beatLength: offset + loop.beatLength,
+      beatLength: acc.beatLength + loop.beatLength,
       notes: acc.notes.concat(shiftedHits),
     }
   }, {

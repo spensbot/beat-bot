@@ -21,7 +21,6 @@ export default function Controls() {
     <div className="flex flex-col gap-4">
       <PlayButton />
       <TempoSlider />
-      <CountInSlider />
       <LoopRepeatsSlider />
       <VisualizerLengthSlider />
       <AdvancedControls />
@@ -86,7 +85,7 @@ function TempoSlider() {
   )
 }
 
-function CountInSlider() {
+export function CountInSlider() {
   const dispatch = useDispatch()
   const countInBeats = useAppState((s) => s.time.countInBeats)
   const disabled = useAppState((s) => s.activeSession !== undefined)
