@@ -1,4 +1,4 @@
-import { TooltipKey, tutorialSteps } from '@/ui/tooltips/tooltips'
+import { nextTutorialStep, TooltipKey, tutorialSteps } from '@/ui/tooltips/tooltips'
 import { MidiDevice } from '@/utils/midiUtils'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
@@ -43,6 +43,10 @@ export const guiSlice = createSlice({
     popTooltip: (state, action: PayloadAction<TooltipKey>) => {
       state.tooltipStack = state.tooltipStack.filter(t => t !== action.payload)
     },
+    advanceTutorial: (state) => {
+      if (!state.tutorialStep) return
+      state.tutorialStep = nextTutorialStep(state.tutorialStep)
+    },
     setTutorialStep: (state, action: PayloadAction<TooltipKey | undefined>) => {
       state.tutorialStep = action.payload
     }
@@ -56,6 +60,7 @@ export const {
   setLastPressTime_s,
   pushTooltip,
   popTooltip,
+  advanceTutorial,
   setTutorialStep
 } = guiSlice.actions
 

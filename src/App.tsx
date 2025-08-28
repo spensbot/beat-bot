@@ -10,13 +10,13 @@ import Footer from "./ui/Footer"
 
 function App() {
   return (
-    <div className="flex flex-col gap-4 w-screen h-screen bg-neutral-950">
+    <div className="flex flex-col gap-4 w-screen h-screen bg-neutral-950 select-none">
       <Visualizer />
       <div className="min-h-0 grow shrink flex flex-row gap-4 px-4 w-full">
         <div className="flex flex-col gap-4">
           <Title />
           <LoopEval />
-          <div className="flex flex-row gap-4">
+          <div className="min-h-0 grow shrink flex flex-row gap-4">
             <Controls />
             <StatsView />
           </div>

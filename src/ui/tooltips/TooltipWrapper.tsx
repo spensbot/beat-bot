@@ -1,4 +1,4 @@
-import { popTooltip, pushTooltip, setTutorialStep } from "@/redux/guiSlice"
+import { popTooltip, pushTooltip, advanceTutorial } from "@/redux/guiSlice"
 import {
   getTooltipText,
   nextTutorialStep,
@@ -11,6 +11,7 @@ import { zIndex } from "../zIndex"
 import { useGuiState } from "@/redux/hooks"
 import { Button } from "@/components/ui/button"
 import cn from "@/utils/cn"
+import { StepForward } from "lucide-react"
 
 export default function TooltipWrapper({
   tooltip,
@@ -43,7 +44,9 @@ export default function TooltipWrapper({
     <Popover.Root open={isPopover}>
       <Popover.Anchor
         style={{ zIndex: isPopover ? zIndex.tooltip : undefined }}
-        className={cn(className, "bg-neutral-950")}
+        className={cn(className, isPopover && "bg-neutral-950")}
+        onMouseEnter={() => dispatch(pushTooltip(tooltip))}
+        onMouseLeave={() => dispatch(popTooltip(tooltip))}
       >
         {children}
       </Popover.Anchor>
@@ -55,18 +58,19 @@ export default function TooltipWrapper({
           }}
           sideOffset={10}
           side={tooltip === "exercise-select" ? "left" : undefined}
+          collisionPadding={30}
+          avoidCollisions={true}
         >
-          <div className="flex flex-col gap-2 p-5 bg-gray-800 text-white rounded max-w-70 drop-shadow-black drop-shadow-lg">
+          <div className="flex flex-col gap-4 p-5 bg-neutral-950 text-white rounded max-w-70 drop-shadow-black drop-shadow-lg">
             <p>{getTooltipText(tooltip)}</p>
             <Button
-              onClick={() =>
-                dispatch(setTutorialStep(nextTutorialStep(tooltip)))
-              }
+              onClick={() => dispatch(advanceTutorial())}
+              className="animate-pulse duration-75 hover:animate-none hover:scale-105 transition-all"
             >
-              Next
+              Next <StepForward />
             </Button>
           </div>
-          <Popover.Arrow className="w-5 h-3 fill-gray-800" />
+          <Popover.Arrow className="w-5 h-3 fill-neutral-950" />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

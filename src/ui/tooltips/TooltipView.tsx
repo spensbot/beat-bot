@@ -6,5 +6,7 @@ export default function TooltipView() {
 
   if (!tooltip) return null
 
-  return <div className="">{getTooltipText(tooltip)}</div>
+  return (
+    <div className="text-sm text-neutral-400">{getTooltipText(tooltip)}</div>
+  )
 }

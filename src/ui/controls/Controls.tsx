@@ -20,12 +20,14 @@ import TooltipWrapper from "../tooltips/TooltipWrapper"
 
 export default function Controls() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 min-h-0 grow shrink max-w-50">
       <PlayButton />
-      <TempoSlider />
-      <LoopRepeatsSlider />
-      <VisualizerLengthSlider />
-      <AdvancedControls />
+      <div className="flex flex-col gap-4 overflow-y-auto overflow-x-hidden">
+        <TempoSlider />
+        <LoopRepeatsSlider />
+        <VisualizerLengthSlider />
+        <AdvancedControls />
+      </div>
     </div>
   )
 }

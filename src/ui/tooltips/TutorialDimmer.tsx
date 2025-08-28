@@ -1,6 +1,6 @@
 import { useDispatch, useGuiState } from "@/redux/hooks"
 import { zIndex } from "../zIndex"
-import { setTutorialStep } from "@/redux/guiSlice"
+import { advanceTutorial } from "@/redux/guiSlice"
 import { nextTutorialStep } from "./tooltips"
 
 export default function TutorialDimmer() {
@@ -10,6 +10,8 @@ export default function TutorialDimmer() {
 
   if (!isOn) return null
 
+  const advanceTutorial_ = () => dispatch(advanceTutorial())
+
   return (
     <div
       className="fixed top-0 left-0 w-screen h-screen"
@@ -17,9 +19,7 @@ export default function TutorialDimmer() {
         zIndex: zIndex.tooltipDimmer,
         backgroundColor: "#8888",
       }}
-      onClick={() => {
-        dispatch(setTutorialStep(nextTutorialStep(tutorialStep)))
-      }}
+      // onClick={advanceTutorial_}
     />
   )
 }
