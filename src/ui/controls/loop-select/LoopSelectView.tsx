@@ -51,14 +51,14 @@ function LoopView({ loop }: { loop: Loop_t }) {
       <LoopPreview data={loop.data} />
       {isPoppin && (
         <>
-          <div>
+          {/* <div>
             <Bars val={loop.data.beatLength / loop.beatsPerBar} />
             <BeatsPerBar val={loop.beatsPerBar} />
-          </div>
+          </div> */}
           {/* <LoopStatsView loopId={loop.id} /> */}
-          <BpmGraph loopId={loop.id} />
         </>
       )}
+      <BpmGraph loopId={loop.id} />
     </div>
   )
 }

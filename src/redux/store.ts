@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import appReducer from './appSlice'
+import guiReducer from './guiSlice'
 import { SaveManager } from '@/utils/persistence/SaveManager'
 import { PersistedAppStateSchema, initialState } from '@/engine/AppState'
 
@@ -18,7 +19,8 @@ if (loadedStateResult.isErr()) {
 
 export const store = configureStore({
   reducer: {
-    app: appReducer
+    app: appReducer,
+    gui: guiReducer
   },
   preloadedState: {
     app: loadedState ? { ...initialState, ...loadedState } : initialState

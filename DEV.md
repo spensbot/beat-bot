@@ -8,12 +8,10 @@
   - Min & Max (box & whisker)
   - Velocity
 - Robust midi connectivity
-- Improved Play and debug buttons
-  - Huge Play button without text
-  - Tiny debug button without text
 - Tooltips
   - Tutorial on first open?
 - Target Skill Selector
+  - Pass/Fail indicator
   - Beginner
   - Intermediate
   - Pro

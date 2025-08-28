@@ -5,6 +5,7 @@ import StatsView from "./ui/stats/StatsView"
 import { LoopSelectView } from "./ui/controls/loop-select/LoopSelectView"
 import LoopEval from "./ui/stats/LoopEval"
 import Title from "./ui/Title"
+import { MidiStatus } from "./ui/midi/MidiStatus"
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
 
         <LoopSelectView className="h-full grow overflow-y-scroll" />
       </div>
+      <MidiStatus />
     </div>
   )
 }
