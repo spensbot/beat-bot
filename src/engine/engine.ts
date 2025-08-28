@@ -4,6 +4,7 @@ import { store } from '../redux/store'
 import { addPress } from "../redux/appSlice"
 import { InputEngine, Press_t } from "./input/InputEngine"
 import { Duration, getPeriod_s, PerfTime } from "@/utils/timeUtils"
+import { setLastPressTime_s } from "@/redux/guiSlice"
 
 export class Engine {
   audioEngine: AudioEngine = new AudioEngine()
@@ -16,6 +17,10 @@ export class Engine {
     this.audioEngine.init()
     this.inputEngine.init((press: Press_t) => {
       store.dispatch(addPress(press))
+
+      if (press.input.type === 'MidiInput') {
+        store.dispatch(setLastPressTime_s(press.time.duration.s()))
+      }
     })
 
     store.subscribe(() => {

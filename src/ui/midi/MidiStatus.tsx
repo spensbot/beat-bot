@@ -1,11 +1,26 @@
 import { MidiState } from "@/redux/guiSlice"
 import { useGuiState } from "@/redux/hooks"
+import { useAnimatedValue } from "@/utils/hooks/useAnimationFrame"
 import { MidiDevice } from "@/utils/midiUtils"
+import { KeyboardMusic } from "lucide-react"
 
 export function MidiStatus() {
   const state = useGuiState((s) => s.midi)
+  const pressedRecently = useAnimatedValue(
+    () =>
+      state.lastPressTime_s !== undefined &&
+      performance.now() - state.lastPressTime_s! < 1000
+  )
 
-  return <div>Midi: {statusText(state)}</div>
+  return (
+    <div className="flex items-center gap-1">
+      <KeyboardMusic
+        color={pressedRecently ? "#ff8" : "#777"}
+        strokeWidth={1.5}
+      />
+      <p className="text-neutral-500">Midi: {statusText(state)}</p>
+    </div>
+  )
 }
 
 function statusText({ status, devices }: MidiState): string {

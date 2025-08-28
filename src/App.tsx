@@ -23,6 +23,14 @@ function App() {
 
         <LoopSelectView className="h-full grow overflow-y-scroll" />
       </div>
+      <Footer />
+    </div>
+  )
+}
+
+function Footer() {
+  return (
+    <div className="w-full border border-neutral-700 bg-emerald-950 px-2">
       <MidiStatus />
     </div>
   )
