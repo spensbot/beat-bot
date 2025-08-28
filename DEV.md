@@ -2,17 +2,34 @@
 
 ## Todos
 
-- per-hit session stats
-  - Shorten loops to minimum repeat. Give hit-based averages for each hit in the loop over the whole session
+### Release Blockers
+
+- More per-hit stats
+  - Min & Max (box & whisker)
+  - Velocity
+- Robust midi connectivity
+- Title & Brief description
+- Improved Play and debug buttons
+  - Huge Play button without text
+  - Tiny debug button without text
+- Tooltips
+  - Tutorial on first open?
+- Target Skill Selector
+  - Beginner
+  - Intermediate
+  - Pro
+- New Best indicator animation
+
+### Then
+
+- Loops by instrument type
 - Loops with multiple inputs
   - Left/right. Snare/kick, etc.
 - Historical Stat Graphs (more based on absolute time (ms))
   - ms deviation
   - hightest passing hit period (you're able to pass sessions with 50ms between hits)
-- New Best indicator animation
-- Loop instrument type
+
+### Distant future???
+
 - Stats depth slider (move the slider up to see progressively more detailed stats)
-
-... later
-
-- Integrate basic hit sound (snare probs)
+- Integrate instrument sounds?
