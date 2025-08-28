@@ -4,6 +4,7 @@ import "./engine/engine"
 import StatsView from "./ui/stats/StatsView"
 import { LoopSelectView } from "./ui/controls/loop-select/LoopSelectView"
 import LoopEval from "./ui/stats/LoopEval"
+import Title from "./ui/Title"
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Visualizer />
       <div className="min-h-0 grow shrink flex flex-row gap-4 px-4">
         <div className="flex flex-col gap-4">
+          <Title />
           <LoopEval />
           <div className="flex flex-row gap-4">
             <Controls />

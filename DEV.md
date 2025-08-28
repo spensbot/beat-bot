@@ -8,7 +8,6 @@
   - Min & Max (box & whisker)
   - Velocity
 - Robust midi connectivity
-- Title & Brief description
 - Improved Play and debug buttons
   - Huge Play button without text
   - Tiny debug button without text

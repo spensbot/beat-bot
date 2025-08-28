@@ -6,15 +6,20 @@ import { useDispatch } from "react-redux"
 import { useAppState } from "@/redux/hooks"
 import { setInputLatency } from "@/redux/appSlice"
 import { CountInSlider } from "./Controls"
+import { Cog } from "lucide-react"
 
 export default function AdvancedControls() {
   const [advanced, setAdvanced] = useState(false)
 
   const buttonText = advanced ? "Hide Advanced" : "Advanced"
-
   return (
     <>
-      <Button onClick={() => setAdvanced(!advanced)}>{buttonText}</Button>
+      <button
+        onClick={() => setAdvanced(!advanced)}
+        className="opacity-50 hover:opacity-80 active:opacity-100 cursor-pointer"
+      >
+        <Cog size={30} strokeWidth={1.75} />
+      </button>
       {advanced && (
         <>
           <CountInSlider />

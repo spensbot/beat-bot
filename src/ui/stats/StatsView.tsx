@@ -8,12 +8,17 @@ export default function StatsView() {
   const eval_ = useAppState(selectSessionEval)
   const stats = eval_ ? getSessionStats(eval_) : null
 
-  if (stats === null) return <div>No stats yet</div>
+  if (stats === null)
+    return (
+      <Wrapper>
+        <p className="text-neutral-500">Hit Play to see Session Stats</p>
+      </Wrapper>
+    )
 
   const isLate = stats ? stats.delta_avg_s > 0 : false
 
   return (
-    <div className="flex flex-col gap-2 w-50">
+    <Wrapper>
       {Stat(
         [
           val(
@@ -69,7 +74,7 @@ export default function StatsView() {
       {/* <Stat name="Targets" value={nTargets} /> */}
       {/* <Stat name="Matches" value={matches} /> */}
       <HistoricalStatsView />
-    </div>
+    </Wrapper>
   )
 }
 
@@ -99,4 +104,8 @@ export function getDevationRatioColor(ratio: number) {
   if (ratio <= 0.3) return color(0.5)
   if (ratio <= 0.4) return color(0.3)
   return color(0)
+}
+
+function Wrapper({ children }: { children: React.ReactNode }) {
+  return <div className="flex flex-col gap-2 w-50 rounded-md">{children}</div>
 }
