@@ -15,6 +15,7 @@ import { useAppState } from "@/redux/hooks"
 import { LabeledSlider } from "../components/LabeledSlider"
 import { useAnimatedValue } from "@/utils/hooks/useAnimationFrame"
 import AdvancedControls from "./AdvancedControls"
+import { Play, Square, RotateCcw } from "lucide-react"
 
 export default function Controls() {
   return (
@@ -57,9 +58,23 @@ function PlayButton() {
     }
   }
 
+  const size = "size-4.5"
+
+  const icon = (): React.ReactNode => {
+    switch (playState) {
+      case "idle":
+        return <Play className={size} />
+      case "playing":
+        return <Square className={size} />
+      case "stopped":
+        return <RotateCcw className={size} />
+    }
+  }
+
   return (
-    <Button className="w-50" onClick={onClick}>
-      {buttonText()}
+    <Button className="w-50" onClick={onClick} size="lg">
+      {icon()}
+      <p className="text-l">{buttonText()}</p>
     </Button>
   )
 }
