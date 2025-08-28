@@ -2,15 +2,16 @@ import { MidiState } from "@/redux/guiSlice"
 import { useGuiState } from "@/redux/hooks"
 import { useAnimatedValue } from "@/utils/hooks/useAnimationFrame"
 import { MidiDevice } from "@/utils/midiUtils"
+import { PerfTime } from "@/utils/timeUtils"
 import { KeyboardMusic } from "lucide-react"
 
 export function MidiStatus() {
   const state = useGuiState((s) => s.midi)
-  const pressedRecently = useAnimatedValue(
-    () =>
-      state.lastPressTime_s !== undefined &&
-      performance.now() - state.lastPressTime_s! < 1000
-  )
+  const pressedRecently = useAnimatedValue(() => {
+    const timeSinceLastPress =
+      PerfTime.now().duration.s() - (state.lastPressTime_s ?? 0)
+    return timeSinceLastPress < 1
+  })
 
   return (
     <div className="flex items-center gap-1">

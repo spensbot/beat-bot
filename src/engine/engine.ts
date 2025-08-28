@@ -19,6 +19,8 @@ export class Engine {
       store.dispatch(addPress(press))
 
       if (press.input.type === 'MidiInput') {
+        console.log('MIDI Press', JSON.stringify(press))
+
         store.dispatch(setLastPressTime_s(press.time.duration.s()))
       }
     })

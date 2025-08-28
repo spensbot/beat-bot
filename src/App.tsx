@@ -5,13 +5,14 @@ import StatsView from "./ui/stats/StatsView"
 import { LoopSelectView } from "./ui/controls/loop-select/LoopSelectView"
 import LoopEval from "./ui/stats/LoopEval"
 import Title from "./ui/Title"
-import { MidiStatus } from "./ui/midi/MidiStatus"
+import TutorialDimmer from "./ui/tooltips/TutorialDimmer"
+import Footer from "./ui/Footer"
 
 function App() {
   return (
     <div className="flex flex-col gap-4 w-screen h-screen bg-neutral-950">
       <Visualizer />
-      <div className="min-h-0 grow shrink flex flex-row gap-4 px-4">
+      <div className="min-h-0 grow shrink flex flex-row gap-4 px-4 w-full">
         <div className="flex flex-col gap-4">
           <Title />
           <LoopEval />
@@ -24,14 +25,7 @@ function App() {
         <LoopSelectView className="h-full grow overflow-y-scroll" />
       </div>
       <Footer />
-    </div>
-  )
-}
-
-function Footer() {
-  return (
-    <div className="w-full border border-neutral-700 bg-emerald-950 px-2">
-      <MidiStatus />
+      <TutorialDimmer />
     </div>
   )
 }

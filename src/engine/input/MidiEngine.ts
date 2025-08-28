@@ -1,66 +1,60 @@
-import { setMidiState } from '@/redux/guiSlice'
-import { MidiDevice, MidiMessage, parseMidiMessage } from '../../utils/midiUtils'
+import { setMidiStatus, setMidiSuccess } from '@/redux/guiSlice'
+import { MidiDevice, parseMidiMessage } from '../../utils/midiUtils'
 import { Press_t } from './InputEngine'
 import { store } from '@/redux/store'
 
-function getDevices(access: MIDIAccess): MidiDevice[] {
-  const devices: MidiDevice[] = []
+function midiInputs(access: MIDIAccess): MIDIInput[] {
+  const inputs: MIDIInput[] = []
   access.inputs.forEach(input => {
-    const device: MidiDevice = {
-      name: input.name ?? 'N/A',
-      mfg: input.manufacturer ?? 'N/A',
-      id: input.id
-    }
-    devices.push(device)
+    inputs.push(input)
   })
-  return devices
+  return inputs
 }
 
-function onMidi(access: MIDIAccess, cb: (message: MidiMessage) => void) {
-  access.inputs.forEach(input => {
-    const device: MidiDevice = {
-      name: input.name ?? 'N/A',
-      mfg: input.manufacturer ?? 'N/A',
-      id: input.id
-    }
-    input.onmidimessage = e => {
-      const message = parseMidiMessage(e as MIDIMessageEvent, device)
-      cb(message)
-    }
-  })
+function toDevice(input: MIDIInput): MidiDevice {
+  return {
+    name: input.name ?? 'N/A',
+    mfg: input.manufacturer ?? 'N/A',
+    id: input.id
+  }
 }
 
 export default class MidiEngine {
   midiAccess: MIDIAccess | null = null
+  inputs: MIDIInput[] = []
 
   init(onPress: (p: Press_t) => void) {
     setInterval(() => this.maintainConnection(onPress), 1000)
   }
 
   async maintainConnection(onPress: (p: Press_t) => void) {
-
     try {
       this.midiAccess = await navigator.requestMIDIAccess()
 
-      store.dispatch(setMidiState({
-        status: 'success',
-        devices: getDevices(this.midiAccess)
-      }))
+      const inputs = midiInputs(this.midiAccess)
 
-      onMidi(this.midiAccess, (message: MidiMessage) => {
-        if (message.type === 'on') {
-          onPress({
-            t: 'Press',
-            time: message.time,
-            input: message.input,
-            velocity: message.velocity
-          })
+      store.dispatch(setMidiSuccess(inputs.map(toDevice)))
+
+      inputs.forEach(input => {
+        if (this.inputs.find(i => i.id === input.id)) return
+
+        this.inputs.push(input)
+        console.log('MIDI Input connected: ', input.id)
+
+        input.onmidimessage = e => {
+          const message = parseMidiMessage(e as MIDIMessageEvent, toDevice(input))
+          if (message.type === 'on') {
+            onPress({
+              t: 'Press',
+              time: message.time,
+              input: message.input,
+              velocity: message.velocity
+            })
+          }
         }
       })
     } catch {
-      store.dispatch(setMidiState({
-        status: 'permissionDenied'
-      }))
+      store.dispatch(setMidiStatus('permissionDenied'))
     }
   }
 }

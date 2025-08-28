@@ -10,6 +10,7 @@ import useDragMapped from "@/utils/hooks/useDragMapped"
 import { setSessionScrubTime, setVisualizerLength } from "@/redux/appSlice"
 import { getVisualizerCtx } from "@/engine/visualizer/visualizerUtils"
 import cn from "@/utils/cn"
+import TooltipWrapper from "../tooltips/TooltipWrapper"
 
 export default function Visualizer() {
   const dispatch = useDispatch()
@@ -54,19 +55,21 @@ export default function Visualizer() {
   }
 
   return (
-    <div
-      ref={dragRef}
-      onMouseDown={onMouseDown}
-      onWheel={onWheel}
-      className={cn("h-30", canDrag && "cursor-grab")}
-    >
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full"
-        width={dims?.widthDevice}
-        height={dims?.heightDevice}
-      />
-    </div>
+    <TooltipWrapper tooltip="timeline">
+      <div
+        ref={dragRef}
+        onMouseDown={onMouseDown}
+        onWheel={onWheel}
+        className={cn("h-30", canDrag && "cursor-grab")}
+      >
+        <canvas
+          ref={canvasRef}
+          className="w-full h-full"
+          width={dims?.widthDevice}
+          height={dims?.heightDevice}
+        />
+      </div>
+    </TooltipWrapper>
   )
 }
 

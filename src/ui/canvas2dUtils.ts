@@ -103,5 +103,29 @@ function drawRectSimple({ ctx, x, width, color }: DrawSquareProps) {
   ctx.fillRect(x, 0, width, ctx.canvas.height)
 }
 
+interface DrawCircleProps {
+  ctx: CanvasRenderingContext2D
+  x: number
+  y: number
+  radius: number
+  color: string
+}
+
+export function drawCircle({ ctx, x, y, ...rest }: DrawCircleProps) {
+  drawCircleSimple({
+    ctx,
+    x: getX(ctx, x),
+    y: getY(ctx, y),
+    ...rest
+  })
+}
+
+function drawCircleSimple({ ctx, x, y, radius, color }: DrawCircleProps) {
+  ctx.fillStyle = color
+  ctx.beginPath()
+  ctx.arc(x, y, radius, 0, Math.PI * 2)
+  ctx.fill()
+}
+
 const getX = (ctx: CanvasRenderingContext2D, xRatio: number) => ctx.canvas.width * xRatio
 const getY = (ctx: CanvasRenderingContext2D, yRatio: number) => ctx.canvas.height * yRatio

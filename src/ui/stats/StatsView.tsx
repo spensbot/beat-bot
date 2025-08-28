@@ -3,6 +3,7 @@ import { selectSessionEval } from "./selectSessionEval"
 import { getSessionStats } from "@/engine/loop/SessionStats"
 import { HistoricalStatsView } from "./HistoricalStatsView"
 import { Stat, gap, pun, val, color } from "./Stat"
+import TooltipWrapper from "../tooltips/TooltipWrapper"
 
 export default function StatsView() {
   const eval_ = useAppState(selectSessionEval)
@@ -107,5 +108,9 @@ export function getDevationRatioColor(ratio: number) {
 }
 
 function Wrapper({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-col gap-2 w-50 rounded-md">{children}</div>
+  return (
+    <TooltipWrapper tooltip="session-stats">
+      <div className="flex flex-col gap-2 w-50 rounded-md">{children}</div>
+    </TooltipWrapper>
+  )
 }

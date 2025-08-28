@@ -20,6 +20,8 @@ export interface Match_t {
 export interface NoteStats_t {
   avg_delta_s: number
   stdDev_delta_s: number
+  min_delta_s: number
+  max_delta_s: number
   avg_velocity: number
 }
 
@@ -98,11 +100,15 @@ export function evaluateSession(
   for (const note of loopData.notes) {
     const noteMatches = matches.filter(m => m.note.loopNote === note)
 
-    noteStats.set(note, {
-      avg_velocity: Stats.mean(noteMatches.map(m => m.velocity)),
-      avg_delta_s: Stats.mean(noteMatches.map(m => m.delta_s)),
-      stdDev_delta_s: Stats.stdDev(noteMatches.map(m => m.delta_s))
-    })
+    if (noteMatches.length > 0) {
+      noteStats.set(note, {
+        avg_velocity: Stats.mean(noteMatches.map(m => m.velocity)),
+        avg_delta_s: Stats.mean(noteMatches.map(m => m.delta_s)),
+        min_delta_s: Stats.min(noteMatches.map(m => m.delta_s)),
+        max_delta_s: Stats.max(noteMatches.map(m => m.delta_s)),
+        stdDev_delta_s: Stats.stdDev(noteMatches.map(m => m.delta_s))
+      })
+    }
   }
 
   return {

@@ -4,12 +4,6 @@
 
 ### Release Blockers
 
-- More per-hit stats
-  - Min & Max (box & whisker)
-  - Velocity
-- Robust midi connectivity
-- Tooltips
-  - Tutorial on first open?
 - Target Skill Selector
   - Pass/Fail indicator
   - Beginner

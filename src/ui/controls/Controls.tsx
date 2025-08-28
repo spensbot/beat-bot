@@ -16,6 +16,7 @@ import { LabeledSlider } from "../components/LabeledSlider"
 import { useAnimatedValue } from "@/utils/hooks/useAnimationFrame"
 import AdvancedControls from "./AdvancedControls"
 import { Play, Square, RotateCcw } from "lucide-react"
+import TooltipWrapper from "../tooltips/TooltipWrapper"
 
 export default function Controls() {
   return (
@@ -72,10 +73,12 @@ function PlayButton() {
   }
 
   return (
-    <Button className="w-50" onClick={onClick} size="lg">
-      {icon()}
-      <p className="text-l">{buttonText()}</p>
-    </Button>
+    <TooltipWrapper tooltip="play-button">
+      <Button className="w-50" onClick={onClick} size="lg">
+        {icon()}
+        <p className="text-l">{buttonText()}</p>
+      </Button>
+    </TooltipWrapper>
   )
 }
 

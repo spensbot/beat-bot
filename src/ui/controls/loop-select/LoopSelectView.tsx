@@ -9,14 +9,15 @@ import { useAppState } from "@/redux/hooks"
 import { cn } from "@/lib/utils"
 import { LoopStatsView } from "@/ui/stats/LoopStatsView"
 import { BpmGraph } from "@/ui/stats/graphs/BpmGraph"
+import TooltipWrapper from "@/ui/tooltips/TooltipWrapper"
 
 export function LoopSelectView({ className }: { className: string }) {
   return (
-    <div className={className}>
+    <TooltipWrapper className={className} tooltip="exercise-select">
       {defaultLoops.map((loop) => (
         <LoopView key={loop.id} loop={loop} />
       ))}
-    </div>
+    </TooltipWrapper>
   )
 }
 

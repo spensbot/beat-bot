@@ -1,6 +1,6 @@
 import { LoopData_t } from "@/engine/loop/LoopData";
 import { SessionEval_t } from "@/engine/loop/SessionEval";
-import { clear, drawLine, drawRect } from "@/ui/canvas2dUtils";
+import { clear, drawCircle, drawLine, drawRect } from "@/ui/canvas2dUtils";
 import { getPeriod_s } from "@/utils/timeUtils";
 
 interface Ctx {
@@ -68,6 +68,20 @@ function drawHits(ctx: Ctx) {
       x: getX(note.beatTime + delta_beats - std_dev_beats, ctx),
       width: std_dev_beats * 2 / beatLength(ctx) * ctx.canvas.canvas.width,
       color: '#f558'
+    })
+
+    // const max_delta_beats = stats.max_delta_s / s_per_beat
+    // drawLine(ctx.canvas, getX(note.beatTime + max_delta_beats, ctx), 1, '#6f6', 1)
+
+    // const min_delta_beats = stats.min_delta_s / s_per_beat
+    // drawLine(ctx.canvas, getX(note.beatTime + min_delta_beats, ctx), 1, '#6f6', 1)
+
+    drawCircle({
+      ctx: ctx.canvas,
+      x: getX(note.beatTime, ctx),
+      y: 1 - stats.avg_velocity,
+      radius: 4 * window.devicePixelRatio,
+      color: '#55f'
     })
   })
 }
