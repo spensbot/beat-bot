@@ -68,6 +68,12 @@ npm i
 npm start
 ```
 
+### GH Pages Deploy
+
+```
+npm run deploy
+```
+
 ## License
 
 MIT
