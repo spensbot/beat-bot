@@ -4,6 +4,7 @@
 
 ### Release Blockers
 
+- Disregard hits before/after the session
 - Target Skill Selector
   - Pass/Fail indicator
   - Beginner
