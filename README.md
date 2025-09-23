@@ -4,6 +4,8 @@ A rhythm coach for musicians and learners.
 
 BeatBot helps you practice rhythm exercises, track your timing, and improve your consistency. It provides real-time feedback as you play along with a metronome, and detailed stats to help you monitor your progress.
 
+[https://spensbot.github.io/beat-bot/](https://spensbot.github.io/beat-bot/)
+
 ## Features
 
 - **Exercise Selection**  
