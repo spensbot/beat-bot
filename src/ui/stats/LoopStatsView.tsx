@@ -1,4 +1,4 @@
-import { PASSING_SCORE, SessionStats_t } from "@/engine/loop/SessionStats"
+import { PASSING_SCORE, SessionStats_t } from "@/engine/session/SessionStats"
 import { useAppState } from "@/redux/hooks"
 import { sum } from "@/utils/listUtils"
 import { Stats } from "@/utils/Stats"

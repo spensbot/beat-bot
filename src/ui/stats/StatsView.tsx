@@ -1,6 +1,6 @@
 import { useAppState } from "@/redux/hooks"
 import { selectSessionEval } from "./selectSessionEval"
-import { getSessionStats } from "@/engine/loop/SessionStats"
+import { getSessionStats } from "@/engine/session/SessionStats"
 import { HistoricalStatsView } from "./HistoricalStatsView"
 import { Stat, gap, pun, val, color } from "./Stat"
 import TooltipWrapper from "../tooltips/TooltipWrapper"

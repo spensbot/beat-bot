@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react"
 import { drawLoopPreview } from "../controls/loop-select/drawLoopPreviewCanvas2d"
 import { useAppState } from "@/redux/hooks"
 import { selectSessionEval } from "@/ui/stats/selectSessionEval"
-import { emptySessionEval } from "@/engine/loop/SessionEval"
+import { emptySessionEval } from "@/engine/session/SessionEval"
 import TooltipWrapper from "../tooltips/TooltipWrapper"
 
 export default function LoopEval() {

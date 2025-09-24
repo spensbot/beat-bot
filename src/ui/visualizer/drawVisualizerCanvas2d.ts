@@ -3,8 +3,8 @@ import { AppState } from "@/engine/AppState"
 import { getBeatMarkers, getVisualizerCtx, getVisualizerRatio, VisualizerCtx } from "@/engine/visualizer/visualizerUtils"
 import { clear, drawLine, drawRect, drawText, drawTriangles } from "../canvas2dUtils"
 import { expandLoop } from "@/engine/loop/expandLoop"
-import { SessionEval_t } from "@/engine/loop/SessionEval"
-import { getSessionDuration } from "@/engine/loop/Session"
+import { SessionEval_t } from "@/engine/session/SessionEval"
+import { getSessionDuration } from "@/engine/session/Session"
 
 interface Ctx {
   canvas: CanvasRenderingContext2D,

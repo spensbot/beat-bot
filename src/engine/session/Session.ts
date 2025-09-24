@@ -1,6 +1,6 @@
 import { beatsToDuration, Duration, PerfTime } from "@/utils/timeUtils";
 import { Press_t } from "../input/InputEngine";
-import { Loop_t } from "./Loop";
+import { Loop_t } from "../loop/Loop";
 import { TimeSettings } from "../AppState";
 
 // const afterBuffer = Duration.s(0.5) // How long after the loop ends to consider presses valid

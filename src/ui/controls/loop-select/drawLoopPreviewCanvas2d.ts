@@ -1,5 +1,5 @@
 import { LoopData_t } from "@/engine/loop/LoopData";
-import { SessionEval_t } from "@/engine/loop/SessionEval";
+import { SessionEval_t } from "@/engine/session/SessionEval";
 import { clear, drawCircle, drawLine, drawRect } from "@/ui/canvas2dUtils";
 import { getPeriod_s } from "@/utils/timeUtils";
 

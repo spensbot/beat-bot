@@ -4,7 +4,7 @@ import { evaluateSession } from './SessionEval'
 import { getSessionStats } from './SessionStats'
 import { Press_t } from '../input/InputEngine'
 import { Session_t } from './Session'
-import { loopData } from './LoopData'
+import { loopData } from '../loop/LoopData'
 
 describe('evaluateSession', () => {
   test('should correctly match presses to notes and calculate stats', () => {

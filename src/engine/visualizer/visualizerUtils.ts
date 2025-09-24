@@ -1,6 +1,6 @@
 import { PerfTime, getPeriod_s, Tempo } from "@/utils/timeUtils";
 import { LoopNote_t } from "../loop/LoopData";
-import { Session_t, sessionStartTimeFromNow } from "../loop/Session";
+import { Session_t, sessionStartTimeFromNow } from "../session/Session";
 import { AppState, TimeSettings } from "../AppState";
 
 function getCursorTime(now: PerfTime, activeSession?: Session_t) {

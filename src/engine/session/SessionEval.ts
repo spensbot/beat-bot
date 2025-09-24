@@ -1,8 +1,8 @@
 import { Duration, PerfTime, Tempo } from "@/utils/timeUtils";
-import { ExpandedNote_t, expandLoop } from "./expandLoop";
+import { ExpandedNote_t, expandLoop } from "../loop/expandLoop";
 import { Session_t } from "./Session";
 import { Press_t } from "../input/InputEngine";
-import { LoopData_t, LoopNote_t } from "./LoopData";
+import { LoopData_t, LoopNote_t } from "../loop/LoopData";
 import { last } from "@/utils/listUtils";
 import { Stats } from "@/utils/Stats";
 

@@ -1,5 +1,5 @@
 import { AppState } from "@/engine/AppState"
-import { evaluateSession } from "@/engine/loop/SessionEval"
+import { evaluateSession } from "@/engine/session/SessionEval"
 import { createSelector } from "@reduxjs/toolkit"
 
 export const selectSessionEval = createSelector(

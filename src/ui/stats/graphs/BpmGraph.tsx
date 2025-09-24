@@ -1,7 +1,7 @@
 import { LoopId_t } from "@/engine/loop/Loop"
 import Graph from "./Graph"
 import { useAppState } from "@/redux/hooks"
-import { PASSING_SCORE } from "@/engine/loop/SessionStats"
+import { PASSING_SCORE } from "@/engine/session/SessionStats"
 import { pun, Stat, val } from "../Stat"
 import TooltipWrapper from "@/ui/tooltips/TooltipWrapper"
 

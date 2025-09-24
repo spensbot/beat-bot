@@ -4,11 +4,11 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { PerfTime, Tempo } from '@/utils/timeUtils'
 import { AppState, initialState, TimeSettings } from '@/engine/AppState'
 import { Press_t } from '@/engine/input/InputEngine'
-import { initSession, Session_t } from '@/engine/loop/Session'
+import { initSession, Session_t } from '@/engine/session/Session'
 import { Loop_t } from '@/engine/loop/Loop'
 import { clamp } from '@/utils/math'
-import { evaluateSession } from '@/engine/loop/SessionEval'
-import { getSessionStats, SessionStats_t } from '@/engine/loop/SessionStats'
+import { evaluateSession } from '@/engine/session/SessionEval'
+import { getSessionStats, SessionStats_t } from '@/engine/session/SessionStats'
 
 export const VISUALIZER_LENGTH_MIN = 2
 export const VISUALIZER_LENGTH_MAX = 30
