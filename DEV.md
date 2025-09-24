@@ -4,8 +4,6 @@
 
 ### Release Blockers
 
-- Clean up controls
-- Add control to disable extra hit penalty
 - Hits flash on pattern view
 - pattern view cursor
 - Disregard hits before/after the session
