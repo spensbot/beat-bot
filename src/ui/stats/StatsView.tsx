@@ -7,7 +7,8 @@ import TooltipWrapper from "../tooltips/TooltipWrapper"
 
 export default function StatsView() {
   const eval_ = useAppState(selectSessionEval)
-  const stats = eval_ ? getSessionStats(eval_) : null
+  const statsSettings = useAppState((s) => s.stats)
+  const stats = eval_ ? getSessionStats(eval_, statsSettings) : null
 
   if (stats === null)
     return (

@@ -4,9 +4,10 @@ import Debugger from "../debugger/Debugger"
 import { LabeledSlider } from "../components/LabeledSlider"
 import { useDispatch } from "react-redux"
 import { useAppState } from "@/redux/hooks"
-import { setInputLatency } from "@/redux/appSlice"
-import { CountInSlider } from "./Controls"
+import { setIgnoreExtraHits, setInputLatency } from "@/redux/appSlice"
+import { CountInSlider, VisualizerLengthSlider } from "./Controls"
 import { Cog } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
 
 export default function AdvancedControls() {
   const [advanced, setAdvanced] = useState(false)
@@ -22,9 +23,12 @@ export default function AdvancedControls() {
       </button>
       {advanced && (
         <>
+          <VisualizerLengthSlider />
           <CountInSlider />
+          <IgnoreExtraHitsCheckbox />
           {/* <InputLatencySlider /> */}
-          <Debugger />
+          <div />
+          {/* <Debugger /> */}
         </>
       )}
     </>
@@ -48,5 +52,28 @@ function InputLatencySlider() {
       label="Input Latency"
       valueString={(value) => `${Math.round(value)}ms`}
     />
+  )
+}
+
+function IgnoreExtraHitsCheckbox() {
+  const ignoreExtraHits = useAppState((s) => s.stats.ignoreExtraHits)
+  const dispatch = useDispatch()
+
+  return (
+    <div className="flex flex-row items-center gap-2">
+      <Checkbox
+        id="ignore-extra-hits"
+        checked={ignoreExtraHits}
+        onCheckedChange={(checked) =>
+          dispatch(setIgnoreExtraHits(checked as boolean))
+        }
+      />
+      <label
+        htmlFor="ignore-extra-hits"
+        className="select-none text-neutral-500"
+      >
+        Ignore Extra Hits
+      </label>
+    </div>
   )
 }

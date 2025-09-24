@@ -9,6 +9,7 @@ import { Loop_t } from '@/engine/loop/Loop'
 import { clamp } from '@/utils/math'
 import { evaluateSession } from '@/engine/session/SessionEval'
 import { getSessionStats, SessionStats_t } from '@/engine/session/SessionStats'
+import { set } from 'zod'
 
 export const VISUALIZER_LENGTH_MIN = 2
 export const VISUALIZER_LENGTH_MAX = 30
@@ -53,6 +54,9 @@ export const appSlice = createSlice({
     },
     setInputLatency: (state, action: PayloadAction<number>) => {
       state.hardware.inputLatency_ms = action.payload
+    },
+    setIgnoreExtraHits: (state, action: PayloadAction<boolean>) => {
+      state.stats.ignoreExtraHits = action.payload
     }
   },
 })
@@ -64,7 +68,7 @@ function resetSession(state: AppState) {
   state.activeSession = undefined
   if (sessionEval.matches.length < 1) return
 
-  const sessionStats = getSessionStats(sessionEval)
+  const sessionStats = getSessionStats(sessionEval, state.stats)
   if (!state.sessionStatsByLoopId[state.loop.id]) {
     state.sessionStatsByLoopId[state.loop.id] = []
   }
@@ -83,7 +87,8 @@ export const {
   setSessionScrubTime,
   setVisualizerLength,
   setLoop,
-  setInputLatency
+  setInputLatency,
+  setIgnoreExtraHits
 } = appSlice.actions
 
 export default appSlice.reducer

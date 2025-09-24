@@ -24,10 +24,15 @@ export const HardwareSettingsSchema = z.object({
   inputLatency_ms: z.number().min(0) // Latency of the hardware input
 })
 
+export const StatsSettingsSchema = z.object({
+  ignoreExtraHits: z.boolean().default(false), // Whether to ignore extra hits in the session stats
+})
+
 export type TimeSettings = z.infer<typeof TimeSettingsSchema>
 export type VisualizerSettings = z.infer<typeof VisualizerSettingsSchema>
 export type MetronomeSettings = z.infer<typeof MetronomeSettingsSchema>
 export type HardwareSettings = z.infer<typeof HardwareSettingsSchema>
+export type StatsSettings = z.infer<typeof StatsSettingsSchema>
 
 export const PersistedAppStateSchema = z.object({
   time: TimeSettingsSchema,
@@ -36,6 +41,7 @@ export const PersistedAppStateSchema = z.object({
   loop: LoopSchema,
   sessionStatsByLoopId: z.record(z.string(), z.array(SessionStatsSchema)),
   hardware: HardwareSettingsSchema,
+  stats: StatsSettingsSchema.default({ ignoreExtraHits: false }),
 })
 
 export type AppState = z.infer<typeof PersistedAppStateSchema> & {
@@ -59,5 +65,8 @@ export const initialState: AppState = {
   sessionStatsByLoopId: {},
   hardware: {
     inputLatency_ms: 5, // Latency of the hardware input in milliseconds
+  },
+  stats: {
+    ignoreExtraHits: false,
   },
 }

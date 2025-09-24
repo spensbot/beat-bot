@@ -25,7 +25,6 @@ export default function Controls() {
       <div className="flex flex-col gap-4 overflow-y-auto overflow-x-hidden">
         <TempoSlider />
         <LoopRepeatsSlider />
-        <VisualizerLengthSlider />
         <AdvancedControls />
       </div>
     </div>
@@ -147,7 +146,7 @@ function LoopRepeatsSlider() {
   )
 }
 
-function VisualizerLengthSlider() {
+export function VisualizerLengthSlider() {
   const dispatch = useDispatch()
   const visualizerLength = useAppState((s) => s.visualizer.length_s)
 

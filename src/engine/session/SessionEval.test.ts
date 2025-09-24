@@ -12,7 +12,7 @@ describe('evaluateSession', () => {
     const session = makeSession(0, 4, [1.1, 3.2])
     const tempo = { bpm: 60 }
     const result = evaluateSession(session, loop, tempo)
-    const stats = getSessionStats(result)
+    const stats = getSessionStats(result, { ignoreExtraHits: false })
 
     expect(result.matches.length).toBe(2)
     expect(result.extraPresses.size).toBe(0)
@@ -25,7 +25,7 @@ describe('evaluateSession', () => {
     const session = makeSession(0, 4, [1.1, 2.5])
     const tempo: Tempo = { bpm: 60 }
     const result = evaluateSession(session, loop, tempo)
-    const stats = getSessionStats(result)
+    const stats = getSessionStats(result, { ignoreExtraHits: false })
 
     expect(result.matches.length).toBe(1)
     expect(result.extraPresses.size).toBe(1)
@@ -38,7 +38,7 @@ describe('evaluateSession', () => {
     const session = makeSession(0, 4, [])
     const tempo = { bpm: 60 }
     const result = evaluateSession(session, loop, tempo)
-    const stats = getSessionStats(result)
+    const stats = getSessionStats(result, { ignoreExtraHits: false })
 
     expect(result.matches.length).toBe(0)
     expect(result.extraPresses.size).toBe(0)

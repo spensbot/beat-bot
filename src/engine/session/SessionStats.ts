@@ -4,6 +4,7 @@ import { Stats } from "@/utils/Stats";
 import { sum } from "@/utils/listUtils";
 import { clamp } from "@/utils/math";
 import { Match_t, SessionEval_t } from "./SessionEval";
+import { StatsSettings } from "../AppState";
 
 export const PASSING_SCORE = 0.9
 
@@ -24,11 +25,11 @@ export const SessionStatsSchema = z.object({
 
 export type SessionStats_t = z.infer<typeof SessionStatsSchema>
 
-export function getSessionStats(eval_: SessionEval_t): SessionStats_t {
+export function getSessionStats(eval_: SessionEval_t, statsSettings: StatsSettings): SessionStats_t {
   const { targets, matches } = eval_;
   const nTargets = targets.length
   const nMistakes = calculateNMistakes(eval_)
-  const score = calculateScore(eval_)
+  const score = calculateScore(eval_, statsSettings)
 
   return {
     nTargets,
@@ -50,10 +51,11 @@ function calculateNMistakes({ extraPresses, missedNotes }: SessionEval_t): numbe
   return extraPresses.size + missedNotes.size
 }
 
-function calculateScore({ targets, matches, extraPresses }: SessionEval_t): number {
+function calculateScore({ targets, matches, extraPresses }: SessionEval_t, statsSettings: StatsSettings): number {
   const matchScoreSum = sum(matches, getMatchScore);
   const nExtraPresses = extraPresses.size;
-  const rawSessionScore = (matchScoreSum - nExtraPresses) / targets.length
+  const extraHitPenalty = statsSettings.ignoreExtraHits ? 0 : nExtraPresses
+  const rawSessionScore = (matchScoreSum - extraHitPenalty) / targets.length
   return clamp(rawSessionScore, 0, 1)
 }
 
