@@ -4,16 +4,17 @@
 
 ### Release Blockers
 
+- Hits flash on pattern view
+- pattern view cursor
 - Disregard hits before/after the session
-- Target Skill Selector
-  - Pass/Fail indicator
-  - Beginner
-  - Intermediate
-  - Pro
+- Circular pattern view
+
+- Star System
 - New Best indicator animation
 
 ### Then
 
+- Staff display with musical notes
 - Loops by instrument type
 - Loops with multiple inputs
   - Left/right. Snare/kick, etc.
