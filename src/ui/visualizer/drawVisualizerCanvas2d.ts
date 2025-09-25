@@ -28,8 +28,9 @@ export function drawVisualizer(elem: HTMLCanvasElement, appState: AppState, now:
   }
 
   clear(canvas)
+  drawBeatMarkersGradient(ctx)
   drawMatches(ctx)
-  drawBeatMarkers(ctx)
+  // drawBeatMarkers(ctx)
   drawLoop(ctx)
   drawPresses(ctx)
   drawCount(ctx)
@@ -50,6 +51,25 @@ function drawCursor({ vis, canvas }: Ctx) {
   drawLine(canvas, x, 1, '#fff5', 0.8)
 }
 
+function drawBeatMarkersGradient({ appState, vis, canvas }: Ctx) {
+  getBeatMarkers(
+    vis,
+    appState.time.tempo,
+    4
+  ).map(marker => {
+    const xRatio = getVisualizerRatio(marker.time_s, vis)
+    const period = getPeriod_s(appState.time.tempo)
+    const w = (period / vis.length_s) * canvas.canvas.width
+    const x = canvas.canvas.width * xRatio
+    const gradient = canvas.createLinearGradient(x, 0, x + w, 0)
+    gradient.addColorStop(0, '#222')
+    gradient.addColorStop(1, '#000')
+
+    canvas.fillStyle = gradient
+    canvas.fillRect(x, 0, w, canvas.canvas.height)
+  })
+}
+
 function drawBeatMarkers({ appState, vis, canvas }: Ctx) {
   getBeatMarkers(
     vis,
@@ -64,7 +84,6 @@ function drawBeatMarkers({ appState, vis, canvas }: Ctx) {
       ctx: canvas,
       x: xRatio
     })
-    // drawLine(res, xRatio, 1, '#fff', 0.3)
   })
 }
 

@@ -88,7 +88,7 @@ interface DrawSquareProps {
   ctx: CanvasRenderingContext2D
   x: number
   width: number
-  color: string
+  color: string | CanvasGradient
 }
 
 export function drawRect(p: DrawSquareProps) {
