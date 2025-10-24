@@ -1,9 +1,11 @@
 import { LoopData_t } from "@/engine/loop/LoopData";
 import { SessionEval_t } from "@/engine/session/SessionEval";
+import { VisualizerCtx } from "@/engine/visualizer/visualizerUtils";
 import { clear, drawCircle, drawLine, drawRect } from "@/ui/canvas2dUtils";
 import { getPeriod_s } from "@/utils/timeUtils";
 
 interface Ctx {
+  vis: VisualizerCtx,
   canvas: CanvasRenderingContext2D,
   data: LoopData_t,
   buffer_beats: number,
@@ -11,7 +13,7 @@ interface Ctx {
   bgColor?: string,
 }
 
-export function drawLoopPreview(elem: HTMLCanvasElement, data: LoopData_t, buffer_beats: number, sessionEval?: SessionEval_t, bgColor?: string) {
+export function drawLoopVisualizer(elem: HTMLCanvasElement, vis: VisualizerCtx, data: LoopData_t, buffer_beats: number, sessionEval?: SessionEval_t, bgColor?: string) {
   const canvas = elem.getContext("2d")
   if (canvas === null) {
     console.error(`Failed to get context`)
@@ -19,6 +21,7 @@ export function drawLoopPreview(elem: HTMLCanvasElement, data: LoopData_t, buffe
   }
 
   const ctx: Ctx = {
+    vis,
     canvas,
     data,
     sessionEval,
@@ -29,8 +32,9 @@ export function drawLoopPreview(elem: HTMLCanvasElement, data: LoopData_t, buffe
   clear(canvas)
 
   drawBg(ctx)
-  drawHits(ctx)
+  drawAvgHits(ctx)
   drawNotes(ctx)
+  drawCursor(ctx)
 }
 
 function drawBg(ctx: Ctx) {
@@ -50,7 +54,7 @@ function drawNotes(ctx: Ctx) {
   })
 }
 
-function drawHits(ctx: Ctx) {
+function drawAvgHits(ctx: Ctx) {
   const eval_ = ctx.sessionEval
   if (!eval_) return
 
@@ -84,6 +88,22 @@ function drawHits(ctx: Ctx) {
       color: '#55f'
     })
   })
+}
+
+function drawCursor(ctx: Ctx) {
+  const loopBeatTime = ctx.vis.beatTime_loop
+
+  console.log(loopBeatTime)
+
+  drawLine(ctx.canvas, getX(loopBeatTime, ctx), 1, '#ff5', 1)
+}
+
+function drawBeatMarkersGradient(ctx: Ctx) {
+  // TODO
+}
+
+function drawHits(ctx: Ctx) {
+  // TODO
 }
 
 const beatLength = (ctx: Ctx) => ctx.data.beatLength + ctx.buffer_beats * 2

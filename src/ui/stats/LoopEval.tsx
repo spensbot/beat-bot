@@ -1,10 +1,14 @@
 import { useDimsForRef } from "@/utils/hooks/useDims"
 import { useEffect, useRef } from "react"
-import { drawLoopPreview } from "../controls/loop-select/drawLoopPreviewCanvas2d"
+import { drawLoopVisualizer } from "../visualizer/drawLoopVisualizerCanvas2d"
 import { useAppState } from "@/redux/hooks"
 import { selectSessionEval } from "@/ui/stats/selectSessionEval"
 import { emptySessionEval } from "@/engine/session/SessionEval"
 import TooltipWrapper from "../tooltips/TooltipWrapper"
+import { store } from "@/redux/store"
+import { getVisualizerCtx } from "@/engine/visualizer/visualizerUtils"
+import { PerfTime } from "@/utils/timeUtils"
+import { useAnimationFrame } from "@/utils/hooks/useAnimationFrame"
 
 export default function LoopEval() {
   const ref = useRef<HTMLCanvasElement | null>(null)
@@ -14,21 +18,41 @@ export default function LoopEval() {
 
   const stats = useAppState(selectSessionEval) ?? emptySessionEval()
 
-  useEffect(() => {
-    const drawCb = () => {
-      if (ref.current) {
-        drawLoopPreview(
-          ref.current,
-          activeLoop.data,
-          0.1,
-          stats,
-          "hsl(150, 50%, 20%)"
-        )
-      }
-    }
+  useAnimationFrame(() => {
+    const appState = store.getState().app
+    const vis = getVisualizerCtx(PerfTime.now(), appState)
 
-    drawCb()
+    if (ref.current) {
+      drawLoopVisualizer(
+        ref.current,
+        vis,
+        activeLoop.data,
+        0.1,
+        stats,
+        "hsl(150, 50%, 20%)"
+      )
+    }
   })
+
+  // useEffect(() => {
+  //   const drawCb = () => {
+  //     const appState = store.getState().app
+  //     const vis = getVisualizerCtx(PerfTime.now(), appState)
+
+  //     if (ref.current) {
+  //       drawLoopVisualizer(
+  //         ref.current,
+  //         vis,
+  //         activeLoop.data,
+  //         0.1,
+  //         stats,
+  //         "hsl(150, 50%, 20%)"
+  //       )
+  //     }
+  //   }
+
+  //   drawCb()
+  // })
 
   return (
     <TooltipWrapper tooltip="pattern">

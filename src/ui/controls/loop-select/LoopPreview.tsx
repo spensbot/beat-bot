@@ -1,7 +1,10 @@
 import { useDimsForRef } from "@/utils/hooks/useDims"
 import { useEffect, useRef } from "react"
 import { LoopData_t } from "@/engine/loop/LoopData"
-import { drawLoopPreview } from "./drawLoopPreviewCanvas2d"
+import { drawLoopVisualizer } from "../../visualizer/drawLoopVisualizerCanvas2d"
+import { store } from "@/redux/store"
+import { getVisualizerCtx } from "@/engine/visualizer/visualizerUtils"
+import { PerfTime } from "@/utils/timeUtils"
 
 export default function LoopPreview({ data }: { data: LoopData_t }) {
   const ref = useRef<HTMLCanvasElement | null>(null)
@@ -10,7 +13,10 @@ export default function LoopPreview({ data }: { data: LoopData_t }) {
   useEffect(() => {
     const drawCb = () => {
       if (ref.current) {
-        drawLoopPreview(ref.current, data, 0)
+        const appState = store.getState().app
+        const vis = getVisualizerCtx(PerfTime.now(), appState)
+
+        drawLoopVisualizer(ref.current, vis, data, 0)
       }
     }
 

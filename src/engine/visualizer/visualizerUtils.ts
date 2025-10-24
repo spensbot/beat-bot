@@ -26,17 +26,26 @@ export interface VisualizerCtx {
   sessionStart_s: number
   countStart_s: number
   countEnd_s: number
+  beatTime: number
+  beatTime_loop: number
+  beatTime_bar: number
 }
 
-export function getVisualizerCtx(now: PerfTime, { visualizer, time, activeSession }: AppState): VisualizerCtx {
+export function getVisualizerCtx(now: PerfTime, { visualizer, time, activeSession, loop }: AppState): VisualizerCtx {
+  const period_s = getPeriod_s(time.tempo)
+
   const cursorTime_s = getCursorTime(now, activeSession).duration.s()
   const sessionStartTime_s = getSessionStartTime(now, time, activeSession).duration.s()
 
   const startTime_s = cursorTime_s - visualizer.length_s * visualizer.playheadRatio;
   const endTime_s = startTime_s + visualizer.length_s;
 
-  const countStart_s = sessionStartTime_s - time.countInBeats * getPeriod_s(time.tempo);
+  const countStart_s = sessionStartTime_s - time.countInBeats * period_s;
   const countEnd_s = activeSession?.end.duration.s() ?? Infinity
+
+  const beatTime = (cursorTime_s - sessionStartTime_s) / period_s
+  const beatTime_loop = beatTime % loop.data.beatLength
+  const beatTime_bar = beatTime % loop.beatsPerBar
 
   return {
     cursor_s: cursorTime_s,
@@ -45,7 +54,10 @@ export function getVisualizerCtx(now: PerfTime, { visualizer, time, activeSessio
     length_s: visualizer.length_s,
     sessionStart_s: sessionStartTime_s,
     countStart_s,
-    countEnd_s
+    countEnd_s,
+    beatTime,
+    beatTime_loop,
+    beatTime_bar
   }
 }
 

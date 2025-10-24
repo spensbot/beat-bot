@@ -4,8 +4,7 @@
 
 ### Release Blockers
 
-- Hits flash on pattern view
-- pattern view cursor
+ 
 - Disregard hits before/after the session
 - More live session stats
 - Circular pattern view
